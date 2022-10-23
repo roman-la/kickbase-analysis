@@ -1,11 +1,10 @@
 import { DataGrid } from '@mui/x-data-grid'
 
-import data from '../data/market.json'
+import { trendIcons, currencyFormatter } from './SharedConstants'
 
-function MarketTable() {
-    const currencyFormatter = new Intl.NumberFormat('de-DE',
-        { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
+import data from '../data/free_players.json'
 
+function FreePlayersTable() {
     const columns = [
         {
             field: 'teamLogo',
@@ -14,6 +13,13 @@ function MarketTable() {
             headerAlign: 'center',
             align: 'center',
             renderCell: (params) => <img src={params.value} alt={params.value} width='40' />
+        },
+        {
+            field: 'position',
+            headerName: 'Position',
+            headerAlign: 'center',
+            align: 'center',
+            flex: 1
         },
         {
             field: 'firstName',
@@ -30,8 +36,8 @@ function MarketTable() {
             flex: 2
         },
         {
-            field: 'price',
-            headerName: 'Preis',
+            field: 'marketValue',
+            headerName: 'Marktwert',
             type: 'number',
             flex: 2,
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
@@ -39,13 +45,19 @@ function MarketTable() {
             cellClassName: 'font-tabular-nums'
         },
         {
-            field: 'date',
-            headerName: 'Ablaufdatum',
-            type: 'dateTime',
-            flex: 3,
+            field: 'trend',
+            headerName: 'Trend',
+            flex: 1,
             headerAlign: 'center',
-            align: 'right'
+            align: 'center',
+            renderCell: (params) => trendIcons[params.value]
         },
+        {
+            field: 'points',
+            headerName: 'Punkte',
+            headerAlign: 'center',
+            flex: 1
+        }
     ]
 
     const rows = data.map((row, i) => (
@@ -54,21 +66,24 @@ function MarketTable() {
             teamLogo: process.env.PUBLIC_URL + "/images/" + row.team_id + ".png",
             firstName: row.first_name,
             lastName: row.last_name,
-            price: row.price,
-            date: new Date(row.expiration)
+            marketValue: row.market_value,
+            points: row.points,
+            position: row.position,
+            trend: row.trend
         }
     ))
 
     return (
         <DataGrid
+            width={window.innerWidth}
             autoHeight
             rows={rows}
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10]}
-            initialState={{ sorting: { sortModel: [{ field: 'date', sort: 'asc' }] } }}
+            initialState={{ sorting: { sortModel: [{ field: 'marketValue', sort: 'desc' }] } }}
         />
     )
 }
 
-export default MarketTable
+export default FreePlayersTable

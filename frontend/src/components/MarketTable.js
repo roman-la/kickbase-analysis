@@ -1,11 +1,12 @@
 import { DataGrid } from '@mui/x-data-grid'
 
-import data from '../data/taken_players.json'
+import { trendIcons, currencyFormatter } from './SharedConstants'
 
-function TakenPlayersTable() {
-    const currencyFormatter = new Intl.NumberFormat('de-DE',
-        { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
+import data from '../data/market.json'
 
+data = data.filter(entry => new Date(entry.expiration) - new Date() > 0)
+
+function MarketTable() {
     const columns = [
         {
             field: 'teamLogo',
@@ -14,6 +15,13 @@ function TakenPlayersTable() {
             headerAlign: 'center',
             align: 'center',
             renderCell: (params) => <img src={params.value} alt={params.value} width='40' />
+        },
+        {
+            field: 'position',
+            headerName: 'Position',
+            headerAlign: 'center',
+            align: 'center',
+            flex: 1
         },
         {
             field: 'firstName',
@@ -30,65 +38,55 @@ function TakenPlayersTable() {
             flex: 2
         },
         {
-            field: 'buyPrice',
-            headerName: 'Kaufpreis',
+            field: 'price',
+            headerName: 'Preis',
             type: 'number',
-            flex: 3,
+            flex: 2,
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             headerAlign: 'center',
             cellClassName: 'font-tabular-nums'
         },
         {
-            field: 'marketValue',
-            headerName: 'Marktwert',
-            type: 'number',
-            flex: 3,
-            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
-            headerAlign: 'center',
-            cellClassName: 'font-tabular-nums'
-        },
-        {
-            field: 'turnover',
-            headerName: 'Gewinn/Verlust',
-            type: 'number',
-            flex: 3,
-            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
-            headerAlign: 'center',
-            cellClassName: 'font-tabular-nums'
-        },
-        {
-            field: 'manager',
-            headerName: 'Manager',
+            field: 'trend',
+            headerName: 'Trend',
+            flex: 1,
             headerAlign: 'center',
             align: 'center',
-            flex: 2
-        }
+            renderCell: (params) => trendIcons[params.value]
+        },
+        {
+            field: 'date',
+            headerName: 'Ablaufdatum',
+            type: 'dateTime',
+            flex: 2,
+            headerAlign: 'center',
+            align: 'right'
+        },
     ]
 
     const rows = data.map((row, i) => (
         {
             id: i,
             teamLogo: process.env.PUBLIC_URL + "/images/" + row.team_id + ".png",
+            position: row.position,
             firstName: row.first_name,
             lastName: row.last_name,
-            buyPrice: row.buy_price,
-            marketValue: row.market_value,
-            turnover: row.market_value - row.buy_price,
-            manager: row.user
+            price: row.price,
+            trend: row.trend,
+            date: new Date(row.expiration)
         }
     ))
 
     return (
         <DataGrid
-            width={window.innerWidth}
             autoHeight
             rows={rows}
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10]}
-            initialState={{ sorting: { sortModel: [{ field: 'turnover', sort: 'desc' }] } }}
+            initialState={{ sorting: { sortModel: [{ field: 'date', sort: 'asc' }] } }}
         />
     )
 }
 
-export default TakenPlayersTable
+export default MarketTable

@@ -1,11 +1,10 @@
 import { DataGrid } from '@mui/x-data-grid'
 
+import { currencyFormatter } from './SharedConstants'
+
 import data from '../data/turnovers.json'
 
 function TurnoversTable() {
-    const currencyFormatter = new Intl.NumberFormat('de-DE',
-        { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
-
     const columns = [
         {
             field: 'teamLogo',

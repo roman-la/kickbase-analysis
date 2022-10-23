@@ -1,11 +1,10 @@
 import { DataGrid } from '@mui/x-data-grid'
 
-import data from '../data/free_players.json'
+import { trendIcons, currencyFormatter } from './SharedConstants'
 
-function FreePlayersTable() {
-    const currencyFormatter = new Intl.NumberFormat('de-DE',
-        { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
+import data from '../data/taken_players.json'
 
+function TakenPlayersTable() {
     const columns = [
         {
             field: 'teamLogo',
@@ -14,13 +13,6 @@ function FreePlayersTable() {
             headerAlign: 'center',
             align: 'center',
             renderCell: (params) => <img src={params.value} alt={params.value} width='40' />
-        },
-        {
-            field: 'position',
-            headerName: 'Position',
-            headerAlign: 'center',
-            align: 'center',
-            flex: 1
         },
         {
             field: 'firstName',
@@ -37,19 +29,46 @@ function FreePlayersTable() {
             flex: 2
         },
         {
-            field: 'marketValue',
-            headerName: 'Marktwert',
+            field: 'buyPrice',
+            headerName: 'Kaufpreis',
             type: 'number',
-            flex: 3,
+            flex: 2,
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             headerAlign: 'center',
             cellClassName: 'font-tabular-nums'
         },
         {
-            field: 'points',
-            headerName: 'Punkte',
+            field: 'marketValue',
+            headerName: 'Marktwert',
+            type: 'number',
+            flex: 2,
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             headerAlign: 'center',
-            flex: 1
+            cellClassName: 'font-tabular-nums'
+        },
+        {
+            field: 'trend',
+            headerName: 'Trend',
+            flex: 1,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: (params) => trendIcons[params.value]
+        },
+        {
+            field: 'turnover',
+            headerName: 'Gewinn/Verlust',
+            type: 'number',
+            flex: 2,
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
+            headerAlign: 'center',
+            cellClassName: 'font-tabular-nums'
+        },
+        {
+            field: 'manager',
+            headerName: 'Manager',
+            headerAlign: 'center',
+            align: 'center',
+            flex: 2
         }
     ]
 
@@ -59,9 +78,11 @@ function FreePlayersTable() {
             teamLogo: process.env.PUBLIC_URL + "/images/" + row.team_id + ".png",
             firstName: row.first_name,
             lastName: row.last_name,
+            buyPrice: row.buy_price === 0 ? row.market_value : row.buy_price,
             marketValue: row.market_value,
-            points: row.points,
-            position: row.position
+            turnover: row.buy_price === 0 ? 0 : row.market_value - row.buy_price,
+            manager: row.user,
+            trend: row.trend
         }
     ))
 
@@ -73,9 +94,9 @@ function FreePlayersTable() {
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10]}
-            initialState={{ sorting: { sortModel: [{ field: 'marketValue', sort: 'desc' }] } }}
+            initialState={{ sorting: { sortModel: [{ field: 'turnover', sort: 'desc' }] } }}
         />
     )
 }
 
-export default FreePlayersTable
+export default TakenPlayersTable
