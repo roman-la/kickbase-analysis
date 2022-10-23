@@ -71,9 +71,9 @@ function TakenPlayersTable() {
             teamLogo: process.env.PUBLIC_URL + "/images/" + row.team_id + ".png",
             firstName: row.first_name,
             lastName: row.last_name,
-            buyPrice: row.buy_price,
+            buyPrice: row.buy_price === 0 ? row.market_value : row.buy_price,
             marketValue: row.market_value,
-            turnover: row.market_value - row.buy_price,
+            turnover: row.buy_price === 0 ? 0 : row.market_value - row.buy_price,
             manager: row.user
         }
     ))
