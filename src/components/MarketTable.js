@@ -2,6 +2,8 @@ import { DataGrid } from '@mui/x-data-grid'
 
 import data from '../data/market.json'
 
+data = data.filter(entry => new Date(entry.expiration) - new Date() > 0)
+
 function MarketTable() {
     const currencyFormatter = new Intl.NumberFormat('de-DE',
         { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
