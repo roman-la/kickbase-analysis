@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography'
 import TakenPlayersTable from "./components/TakenPlayersTable"
 import FreePlayersTable from "./components/FreePlayersTable"
 import LineupChangesHeatmap from "./components/LineupChangesHeatmap"
+import TransferRevenueLineChart from "./components/TransferRevenueLineChart"
 
 function App() {
   return (
@@ -29,6 +30,10 @@ function App() {
       <Paper sx={{ margin: '25px' }} elevation={5}>
         <Typography variant="h4" sx={{ padding: '15px' }}>Veränderungen Aufstellung</Typography>
         <LineupChangesHeatmap />
+      </Paper>
+      <Paper sx={{ margin: '25px' }} elevation={5}>
+        <Typography variant="h4" sx={{ padding: '15px' }}>Summe der Transfererlöse</Typography>
+        <TransferRevenueLineChart />
       </Paper>
       <Paper sx={{ margin: '25px 25px 0px' }} elevation={5}>
         <Typography variant="h6" sx={{ padding: '15px' }}>Disclaimer</Typography>
