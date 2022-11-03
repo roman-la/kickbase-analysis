@@ -27,10 +27,7 @@ function TransferRevenueLineChart() {
                     min: -40000000
                 }}
                 yFormat={value => `${new Intl.NumberFormat('de-DE', {
-                    maximumFractionDigits: 2,
-                    minimumFractionDigits: 2,
-                    notation: "compact",
-                    compactDisplay: "short"
+                    maximumFractionDigits: 0
                 }).format(value)} €`}
                 colors={{ scheme: 'category10' }}
                 axisLeft={{

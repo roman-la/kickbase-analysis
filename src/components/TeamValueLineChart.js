@@ -26,7 +26,15 @@ function TeamValueLineChart() {
                 yFormat={value => `${Number(value).toLocaleString('de-DE', {
                     minimumFractionDigits: 0,
                 })} €`}
-                axisLeft={{legend: 'Teamwert'}}
+                axisLeft={{
+                    legend: 'Teamwert',
+                    legendOffset: 0,
+                    format: value => `${new Intl.NumberFormat('de-DE', {
+                        maximumFractionDigits: 0,
+                        notation: "compact",
+                        compactDisplay: "short"
+                    }).format(value)} €`
+                }}
                 axisBottom={{legend: 'Spieltag'}}
                 colors={{ scheme: 'category10' }}
                 curve={'catmullRom'}
