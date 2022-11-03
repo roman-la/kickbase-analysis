@@ -1,52 +1,34 @@
 import { ResponsiveLine } from '@nivo/line'
 
-import data from '../data/revenue_sum.json'
+import data from '../data/team_values.json'
 
-function TransferRevenueLineChart() {
+function TeamValueLineChart() {
     var processedData = []
 
     for (var user in data) {
-        processedData.push({ id: user, data: data[user].map((e) => ({ x: e[0], y: e[1] })) })
+        var d = []
+        for (var matchDay in data[user]) {
+            d.push({x: matchDay, y: data[user][matchDay]})
+        }
+        processedData.push({id: user, data: d})
     }
 
     return (
         <div style={{ height: '30em' }}>
             <ResponsiveLine
                 data={processedData}
-                margin={{ top: 10, right: 230, bottom: 30, left: 100 }}
-                xScale={{
-                    type: 'time',
-                    format: '%Y-%m-%d',
-                    useUTC: false,
-                    precision: 'day',
-                }}
-                xFormat="time:%Y-%m-%d"
+                margin={{ top: 10, right: 230, bottom: 40, left: 100 }}
                 yScale={{
                     type: 'linear',
                     stacked: false,
-                    min: -40000000
+                    min: 100000000
                 }}
-                yFormat={value => `${new Intl.NumberFormat('de-DE', {
-                    maximumFractionDigits: 2,
-                    minimumFractionDigits: 2,
-                    notation: "compact",
-                    compactDisplay: "short"
-                }).format(value)} €`}
+                yFormat={value => `${Number(value).toLocaleString('de-DE', {
+                    minimumFractionDigits: 0,
+                })} €`}
+                axisLeft={{legend: 'Teamwert'}}
+                axisBottom={{legend: 'Spieltag'}}
                 colors={{ scheme: 'category10' }}
-                axisLeft={{
-                    legend: 'Transfererlöse',
-                    legendOffset: 0,
-                    format: value => `${new Intl.NumberFormat('de-DE', {
-                        maximumFractionDigits: 0,
-                        notation: "compact",
-                        compactDisplay: "short"
-                    }).format(value)} €`
-                }}
-                axisBottom={{
-                    legend: 'Datum',
-                    format: value => ``,
-                    tickSize: 0
-                }}
                 curve={'catmullRom'}
                 useMesh={true}
                 enableSlices={false}
@@ -82,7 +64,7 @@ function TransferRevenueLineChart() {
                     border: '1px solid #ccc',
                 }}>
                     <div style={{ color: datum.point.color, fontWeight: 'bold' }}>{datum.point.serieId}</div>
-                    <div>{datum.point.data.xFormatted}</div>
+                    <div>{datum.point.data.xFormatted}. Spieltag</div>
                     <div>{datum.point.data.yFormatted}</div>
                 </div>
                 }
@@ -91,4 +73,4 @@ function TransferRevenueLineChart() {
     )
 }
 
-export default TransferRevenueLineChart
+export default TeamValueLineChart
