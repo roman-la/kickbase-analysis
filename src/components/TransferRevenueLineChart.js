@@ -5,9 +5,8 @@ import data from '../data/revenue_sum.json'
 function TransferRevenueLineChart() {
     var processedData = []
 
-    for (var user in data) {
+    for (var user in data)
         processedData.push({ id: user, data: data[user].map((e) => ({ x: e[0], y: e[1] })) })
-    }
 
     return (
         <div style={{ height: '30em' }}>

@@ -1,13 +1,12 @@
 import { DataGrid } from '@mui/x-data-grid'
 
+import { trendIcons, currencyFormatter } from './SharedConstants'
+
 import data from '../data/market.json'
 
 data = data.filter(entry => new Date(entry.expiration) - new Date() > 0)
 
 function MarketTable() {
-    const currencyFormatter = new Intl.NumberFormat('de-DE',
-        { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
-
     const columns = [
         {
             field: 'teamLogo',
@@ -16,6 +15,13 @@ function MarketTable() {
             headerAlign: 'center',
             align: 'center',
             renderCell: (params) => <img src={params.value} alt={params.value} width='40' />
+        },
+        {
+            field: 'position',
+            headerName: 'Position',
+            headerAlign: 'center',
+            align: 'center',
+            flex: 1
         },
         {
             field: 'firstName',
@@ -41,10 +47,18 @@ function MarketTable() {
             cellClassName: 'font-tabular-nums'
         },
         {
+            field: 'trend',
+            headerName: 'Trend',
+            flex: 1,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: (params) => trendIcons[params.value]
+        },
+        {
             field: 'date',
             headerName: 'Ablaufdatum',
             type: 'dateTime',
-            flex: 3,
+            flex: 2,
             headerAlign: 'center',
             align: 'right'
         },
@@ -54,9 +68,11 @@ function MarketTable() {
         {
             id: i,
             teamLogo: process.env.PUBLIC_URL + "/images/" + row.team_id + ".png",
+            position: row.position,
             firstName: row.first_name,
             lastName: row.last_name,
             price: row.price,
+            trend: row.trend,
             date: new Date(row.expiration)
         }
     ))

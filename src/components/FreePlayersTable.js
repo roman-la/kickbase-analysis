@@ -1,11 +1,10 @@
 import { DataGrid } from '@mui/x-data-grid'
 
+import { trendIcons, currencyFormatter } from './SharedConstants'
+
 import data from '../data/free_players.json'
 
 function FreePlayersTable() {
-    const currencyFormatter = new Intl.NumberFormat('de-DE',
-        { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
-
     const columns = [
         {
             field: 'teamLogo',
@@ -40,10 +39,18 @@ function FreePlayersTable() {
             field: 'marketValue',
             headerName: 'Marktwert',
             type: 'number',
-            flex: 3,
+            flex: 2,
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             headerAlign: 'center',
             cellClassName: 'font-tabular-nums'
+        },
+        {
+            field: 'trend',
+            headerName: 'Trend',
+            flex: 1,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: (params) => trendIcons[params.value]
         },
         {
             field: 'points',
@@ -61,7 +68,8 @@ function FreePlayersTable() {
             lastName: row.last_name,
             marketValue: row.market_value,
             points: row.points,
-            position: row.position
+            position: row.position,
+            trend: row.trend
         }
     ))
 

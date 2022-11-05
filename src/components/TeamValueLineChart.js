@@ -7,10 +7,10 @@ function TeamValueLineChart() {
 
     for (var user in data) {
         var d = []
-        for (var matchDay in data[user]) {
-            d.push({x: matchDay, y: data[user][matchDay]})
-        }
-        processedData.push({id: user, data: d})
+        for (var matchDay in data[user])
+            d.push({ x: matchDay, y: data[user][matchDay] })
+
+        processedData.push({ id: user, data: d })
     }
 
     return (
@@ -35,7 +35,7 @@ function TeamValueLineChart() {
                         compactDisplay: "short"
                     }).format(value)} €`
                 }}
-                axisBottom={{legend: 'Spieltag'}}
+                axisBottom={{ legend: 'Spieltag' }}
                 colors={{ scheme: 'category10' }}
                 curve={'catmullRom'}
                 useMesh={true}

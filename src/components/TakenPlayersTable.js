@@ -1,11 +1,10 @@
 import { DataGrid } from '@mui/x-data-grid'
 
+import { trendIcons, currencyFormatter } from './SharedConstants'
+
 import data from '../data/taken_players.json'
 
 function TakenPlayersTable() {
-    const currencyFormatter = new Intl.NumberFormat('de-DE',
-        { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
-
     const columns = [
         {
             field: 'teamLogo',
@@ -33,7 +32,7 @@ function TakenPlayersTable() {
             field: 'buyPrice',
             headerName: 'Kaufpreis',
             type: 'number',
-            flex: 3,
+            flex: 2,
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             headerAlign: 'center',
             cellClassName: 'font-tabular-nums'
@@ -42,16 +41,24 @@ function TakenPlayersTable() {
             field: 'marketValue',
             headerName: 'Marktwert',
             type: 'number',
-            flex: 3,
+            flex: 2,
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             headerAlign: 'center',
             cellClassName: 'font-tabular-nums'
         },
         {
+            field: 'trend',
+            headerName: 'Trend',
+            flex: 1,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: (params) => trendIcons[params.value]
+        },
+        {
             field: 'turnover',
             headerName: 'Gewinn/Verlust',
             type: 'number',
-            flex: 3,
+            flex: 2,
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             headerAlign: 'center',
             cellClassName: 'font-tabular-nums'
@@ -74,7 +81,8 @@ function TakenPlayersTable() {
             buyPrice: row.buy_price === 0 ? row.market_value : row.buy_price,
             marketValue: row.market_value,
             turnover: row.buy_price === 0 ? 0 : row.market_value - row.buy_price,
-            manager: row.user
+            manager: row.user,
+            trend: row.trend
         }
     ))
 

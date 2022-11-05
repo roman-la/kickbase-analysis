@@ -8,9 +8,8 @@ function LineupChangesHeatmap() {
     for (var user in data) {
         let row = []
 
-        for (var matchDay in data[user]) {
+        for (var matchDay in data[user])
             row.push({ x: matchDay, y: data[user][matchDay] })
-        }
 
         rows.push({ id: user, data: row })
     }
