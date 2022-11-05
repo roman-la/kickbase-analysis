@@ -37,6 +37,7 @@ function LineupPlanner() {
     useEffect(() => {
         const sum = filteredData.filter(x => selection.includes(x.player_id)).reduce((a, x) => a + x.market_value, 0)
         setSelectedValue(sum)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selection])
 
     useEffect(() => {
@@ -52,6 +53,7 @@ function LineupPlanner() {
                 updatedPlayersOnPositions[2]++
         })
         setPlayersOnPositions(updatedPlayersOnPositions)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selection, manager])
 
     const columns = [
