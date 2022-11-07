@@ -27,13 +27,23 @@ function App() {
         <TabContext value={selectedTab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', maxWidth: '1000px', minWidth: '700px' }}>
             <TabList onChange={(e, v) => setSelectedTab(v)}>
-              <Tab label="Transfererlöse" value="1" />
-              <Tab label="Spieler" value="2" />
-              <Tab label="Spieltage" value="3" />
-              <Tab label="Transfers" value="4" />
+              <Tab label="Transfers" value="1" />
+              <Tab label="Transfererlöse" value="2" />
+              <Tab label="Spieler" value="3" />
+              <Tab label="Spieltage" value="4" />
             </TabList>
           </Box>
           <TabPanel sx={{ padding: 0 }} value="1">
+            <Paper sx={{ marginTop: '25px' }} elevation={5}>
+              <Typography variant="h4" sx={{ padding: '15px' }}>Transfermarkt</Typography>
+              <MarketTable />
+            </Paper>
+            <Paper sx={{ marginTop: '25px' }} elevation={5}>
+              <Typography variant="h4" sx={{ padding: '15px' }}>Aufstellungs Planer</Typography>
+              <LineupPlanner />
+            </Paper>
+          </TabPanel>
+          <TabPanel sx={{ padding: 0 }} value="2">
             <Paper sx={{ marginTop: '25px' }} elevation={5}>
               <Typography variant="h4" sx={{ padding: '15px' }}>Summe der Transfererlöse</Typography>
               <TransferRevenueLineChart />
@@ -43,7 +53,7 @@ function App() {
               <TurnoversTable />
             </Paper>
           </TabPanel>
-          <TabPanel sx={{ padding: 0 }} value="2">
+          <TabPanel sx={{ padding: 0 }} value="3">
             <Paper sx={{ marginTop: '25px' }} elevation={5}>
               <Typography variant="h4" sx={{ padding: '15px' }}>Gebundene Spieler</Typography>
               <TakenPlayersTable />
@@ -53,7 +63,7 @@ function App() {
               <FreePlayersTable />
             </Paper>
           </TabPanel>
-          <TabPanel sx={{ padding: 0 }} value="3">
+          <TabPanel sx={{ padding: 0 }} value="4">
             <Paper sx={{ marginTop: '25px' }} elevation={5}>
               <Typography variant="h4" sx={{ padding: '15px' }}>Tabellenplatz nach Spieltag</Typography>
               <StandingsBumpChart />
@@ -65,16 +75,6 @@ function App() {
             <Paper sx={{ marginTop: '25px' }} elevation={5}>
               <Typography variant="h4" sx={{ padding: '15px' }}>Veränderungen in der Aufstellung</Typography>
               <LineupChangesHeatmap />
-            </Paper>
-          </TabPanel>
-          <TabPanel sx={{ padding: 0 }} value="4">
-            <Paper sx={{ marginTop: '25px' }} elevation={5}>
-              <Typography variant="h4" sx={{ padding: '15px' }}>Aufstellungs Planer</Typography>
-              <LineupPlanner />
-            </Paper>
-            <Paper sx={{ marginTop: '25px' }} elevation={5}>
-              <Typography variant="h4" sx={{ padding: '15px' }}>Transfermarkt</Typography>
-              <MarketTable />
             </Paper>
           </TabPanel>
         </TabContext>
