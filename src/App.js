@@ -25,6 +25,8 @@ import StandingsBumpChart from './components/StandingsBumpChart'
 import PointsPerValue from './components/PointsPerValueLineChart'
 import HelpIcon from './components/HelpIcon'
 
+import timestamp from './data/timestamp.json'
+
 const darkTheme = createTheme({ palette: { mode: 'dark' } })
 const lightTheme = createTheme({ palette: { mode: 'light' } })
 
@@ -48,8 +50,9 @@ function App() {
                     <Tab label="Spieltage" value="4" />
                   </TabList>
                 </Grid>
+                <Grid item><Typography variant="button" style={{opacity: '0.7'}}>Stand: {new Date(timestamp.time).toLocaleString('de-DE')}</Typography></Grid>
                 <Grid item>
-                  <FormControlLabel control={<Switch checked={darkModeEnabled} onChange={(e) => setDarkModeEnabled(e.target.checked)} />} label="Dark Mode" />
+                  <FormControlLabel control={<Switch checked={darkModeEnabled} onChange={(e) => setDarkModeEnabled(e.target.checked)} />} label={<Typography variant="button" style={{opacity: '0.7'}}>Dark Mode</Typography>} />
                 </Grid>
               </Grid>
             </Box>
@@ -85,11 +88,11 @@ function App() {
             </TabPanel>
             <TabPanel sx={{ padding: 0 }} value="4">
               <Paper sx={{ marginTop: '25px' }} elevation={5}>
-                <Typography variant="h4" sx={{ padding: '15px' }}>Tabellenplatz nach Spieltag</Typography>
+                <Typography variant="h4" sx={{ padding: '15px' }}>Tabellenplatz</Typography>
                 <StandingsBumpChart />
               </Paper>
               <Paper sx={{ marginTop: '25px' }} elevation={5}>
-                <Typography variant="h4" sx={{ padding: '15px' }}>Teamwert am Spieltag</Typography>
+                <Typography variant="h4" sx={{ padding: '15px' }}>Teamwert</Typography>
                 <TeamValueLineChart />
               </Paper>
               <Paper sx={{ marginTop: '25px' }} elevation={5}>
