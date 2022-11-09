@@ -50,9 +50,9 @@ function App() {
                     <Tab label="Spieltage" value="4" />
                   </TabList>
                 </Grid>
-                <Grid item><Typography variant="button" style={{opacity: '0.7'}}>Stand: {new Date(timestamp.time).toLocaleString('de-DE')}</Typography></Grid>
+                <Grid item><Typography variant="button" style={{ opacity: '0.7' }}>Stand: {new Date(timestamp.time).toLocaleString('de-DE')}</Typography></Grid>
                 <Grid item>
-                  <FormControlLabel control={<Switch checked={darkModeEnabled} onChange={(e) => setDarkModeEnabled(e.target.checked)} />} label={<Typography variant="button" style={{opacity: '0.7'}}>Dark Mode</Typography>} />
+                  <FormControlLabel control={<Switch checked={darkModeEnabled} onChange={(e) => setDarkModeEnabled(e.target.checked)} />} label={<Typography variant="button" style={{ opacity: '0.7' }}>Dark Mode</Typography>} />
                 </Grid>
               </Grid>
             </Box>
@@ -69,7 +69,7 @@ function App() {
             <TabPanel sx={{ padding: 0 }} value="2">
               <Paper sx={{ marginTop: '25px' }} elevation={5}>
                 <Typography variant="h4" sx={{ padding: '15px' }}>Summe der Transfererlöse</Typography>
-                <TransferRevenueLineChart />
+                <TransferRevenueLineChart darkModeEnabled={darkModeEnabled} />
               </Paper>
               <Paper sx={{ marginTop: '25px' }} elevation={5}>
                 <Typography variant="h4" sx={{ padding: '15px' }}>Transfererlöse</Typography>
@@ -89,19 +89,19 @@ function App() {
             <TabPanel sx={{ padding: 0 }} value="4">
               <Paper sx={{ marginTop: '25px' }} elevation={5}>
                 <Typography variant="h4" sx={{ padding: '15px' }}>Tabellenplatz</Typography>
-                <StandingsBumpChart />
+                <StandingsBumpChart darkModeEnabled={darkModeEnabled} />
               </Paper>
               <Paper sx={{ marginTop: '25px' }} elevation={5}>
                 <Typography variant="h4" sx={{ padding: '15px' }}>Teamwert</Typography>
-                <TeamValueLineChart />
+                <TeamValueLineChart darkModeEnabled={darkModeEnabled} />
               </Paper>
               <Paper sx={{ marginTop: '25px' }} elevation={5}>
                 <Typography variant="h4" sx={{ padding: '15px' }}>Veränderungen in der Aufstellung</Typography>
-                <LineupChangesHeatmap />
+                <LineupChangesHeatmap darkModeEnabled={darkModeEnabled} />
               </Paper>
               <Paper sx={{ marginTop: '25px' }} elevation={5}>
                 <Typography variant="h4" sx={{ padding: '15px' }}>Punkte pro Teamwert <HelpIcon text="Berechnungsformel: Spieltags-Punkte / Spieltags-Teamwert * 1.000.000" /></Typography>
-                <PointsPerValue />
+                <PointsPerValue darkModeEnabled={darkModeEnabled} />
               </Paper>
             </TabPanel>
           </TabContext>

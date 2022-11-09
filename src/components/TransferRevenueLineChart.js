@@ -1,8 +1,12 @@
 import { ResponsiveLine } from '@nivo/line'
+import Typography from '@mui/material/Typography'
+import Paper from '@mui/material/Paper'
+
+import { nivoDarkTheme, nivoLightTheme } from './SharedConstants'
 
 import data from '../data/revenue_sum.json'
 
-function TransferRevenueLineChart() {
+function TransferRevenueLineChart(props) {
     var processedData = []
 
     for (var user in data)
@@ -11,6 +15,7 @@ function TransferRevenueLineChart() {
     return (
         <div style={{ height: '30em' }}>
             <ResponsiveLine
+                theme={props.darkModeEnabled ? nivoDarkTheme : nivoLightTheme}
                 data={processedData}
                 margin={{ top: 10, right: 230, bottom: 30, left: 100 }}
                 xScale={{
@@ -58,29 +63,15 @@ function TransferRevenueLineChart() {
                         itemsSpacing: 4,
                         symbolSize: 20,
                         symbolShape: 'circle',
-                        itemDirection: 'left-to-right',
-                        itemTextColor: '#777',
-                        effects: [
-                            {
-                                on: 'hover',
-                                style: {
-                                    itemBackground: 'rgba(0, 0, 0, .03)',
-                                    itemOpacity: 1
-                                }
-                            }
-                        ]
+                        itemDirection: 'left-to-right'
                     }
                 ]}
                 crosshairType="cross"
-                tooltip={(datum) => <div style={{
-                    background: 'white',
-                    padding: '9px 12px',
-                    border: '1px solid #ccc',
-                }}>
-                    <div style={{ color: datum.point.color, fontWeight: 'bold' }}>{datum.point.serieId}</div>
-                    <div>{datum.point.data.xFormatted}</div>
-                    <div>{datum.point.data.yFormatted}</div>
-                </div>
+                tooltip={(datum) => <Paper elevation={3} sx={{padding: 1}}>
+                    <Typography style={{ color: datum.point.color, fontWeight: 'bold' }}>{datum.point.serieId}</Typography>
+                    <Typography>{datum.point.data.xFormatted}</Typography>
+                    <Typography>{datum.point.data.yFormatted}</Typography>
+                </Paper>
                 }
             />
         </div>

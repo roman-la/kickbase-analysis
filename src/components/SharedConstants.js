@@ -10,3 +10,9 @@ export const trendIcons = {
 
 export const currencyFormatter = new Intl.NumberFormat('de-DE',
     { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
+
+export const nivoLightTheme = {}
+
+export const nivoDarkTheme = {
+    textColor: "#fff"
+}
