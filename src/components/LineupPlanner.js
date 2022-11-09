@@ -37,7 +37,7 @@ function LineupPlanner() {
     useEffect(() => {
         const sum = filteredData.filter(x => selection.includes(x.player_id)).reduce((a, x) => a + x.market_value, 0)
         setSelectedValue(sum)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selection])
 
     useEffect(() => {
@@ -53,7 +53,7 @@ function LineupPlanner() {
                 updatedPlayersOnPositions[2]++
         })
         setPlayersOnPositions(updatedPlayersOnPositions)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selection, manager])
 
     const columns = [
@@ -165,12 +165,17 @@ function LineupPlanner() {
                 </Grid>
             </Grid>
             <Grid container justifyContent="center">
+                <Grid item key={0} xs={1}>
+                    <Paper elevation={3} sx={{ background: 'lightblue', margin: 1, padding: '3px 0px', textAlign: 'center' }}>
+                        {playersOnPositions[0]}-{playersOnPositions[1]}-{playersOnPositions[2]}
+                    </Paper>
+                </Grid>
                 {possibleFormations.map((formation, i) => {
                     return (
                         <Grid item key={i} xs={1}>
                             <Paper elevation={3} sx={{
                                 background: playableFormations.includes(formation) ? 'lightgreen' : 'indianred',
-                                margin: 1, padding: 1, textAlign: 'center'
+                                margin: 1, padding: '3px 0px', textAlign: 'center'
                             }}>
                                 {formation[0]}-{formation[1]}-{formation[2]}
                             </Paper>

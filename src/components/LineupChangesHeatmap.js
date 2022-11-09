@@ -17,30 +17,13 @@ function LineupChangesHeatmap() {
     return (
         <div style={{ height: '30em' }}>
             <ResponsiveHeatMap
-                margin={{ top: 30, right: 0, bottom: 60, left: 0 }}
+                margin={{ top: 20, right: 0, bottom: 30, left: 0 }}
                 data={rows}
                 forceSquare={true}
                 colors={{
                     type: 'sequential',
                     scheme: 'blues'
                 }}
-                legends={[
-                    {
-                        anchor: 'bottom',
-                        translateX: 0,
-                        translateY: 40,
-                        length: 200,
-                        thickness: 10,
-                        direction: 'row',
-                        tickPosition: 'after',
-                        tickSize: 5,
-                        tickSpacing: 4,
-                        tickOverlap: true,
-                        title: 'Anzahl der Änderungen zum letzten Spieltag',
-                        titleAlign: 'middle',
-                        titleOffset: 6
-                    }
-                ]}
             />
         </div>
     )
