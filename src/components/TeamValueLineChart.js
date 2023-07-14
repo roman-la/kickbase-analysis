@@ -22,7 +22,7 @@ function TeamValueLineChart(props) {
             <ResponsiveLine
                 theme={props.darkModeEnabled ? nivoDarkTheme : nivoLightTheme}
                 data={processedData}
-                margin={{ top: 10, right: 230, bottom: 40, left: 100 }}
+                margin={{ top: 10, right: 180, bottom: 40, left: 100 }}
                 yScale={{
                     type: 'linear',
                     stacked: false,

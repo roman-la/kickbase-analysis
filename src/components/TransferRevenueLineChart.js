@@ -17,7 +17,7 @@ function TransferRevenueLineChart(props) {
             <ResponsiveLine
                 theme={props.darkModeEnabled ? nivoDarkTheme : nivoLightTheme}
                 data={processedData}
-                margin={{ top: 10, right: 230, bottom: 30, left: 100 }}
+                margin={{ top: 10, right: 180, bottom: 30, left: 100 }}
                 xScale={{
                     type: 'time',
                     format: '%Y-%m-%d',
@@ -28,7 +28,7 @@ function TransferRevenueLineChart(props) {
                 yScale={{
                     type: 'linear',
                     stacked: false,
-                    min: -40000000
+                    min: -5000000
                 }}
                 yFormat={value => `${new Intl.NumberFormat('de-DE', {
                     maximumFractionDigits: 0
