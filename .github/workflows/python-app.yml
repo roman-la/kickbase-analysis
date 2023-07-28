@@ -44,6 +44,7 @@ jobs:
     - name: Build frontend
       working-directory: frontend/
       run: |
+        ls -la
         npm ci
         CI=false && npm run build --if-present
     
