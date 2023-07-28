@@ -37,11 +37,9 @@ jobs:
       run: cp data/*.json frontend/src/data
 
     - name: Setup node
-      working-directory: frontend/
       uses: actions/setup-node@v3
       with:
-        node-version: 18.x
-        cache: 'npm'
+        node-version: 18
 
     - name: Build frontend
       working-directory: frontend/
