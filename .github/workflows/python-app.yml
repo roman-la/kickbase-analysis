@@ -43,11 +43,13 @@ jobs:
         cache: 'npm'
 
     - name: Build frontend
+      working-directory: frontend/
       run: |
         npm ci
         CI=false && npm run build --if-present
     
     - name: Deploy frontend
+      working-directory: frontend/
       run: |
         git config --global user.name $user_name
         git config --global user.email $user_email
