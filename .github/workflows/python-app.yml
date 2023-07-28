@@ -5,9 +5,9 @@ name: Python application
 
 on:
   push:
-    branches: [ "merge-repos" ]
-#  schedule:
-#    - cron: '10 9/12 * * *'
+    branches: [ "main" ]
+  schedule:
+    - cron: '10 8/12 * * *'
 
 jobs:
   collect-data:
