@@ -15,6 +15,8 @@ from utility.util import json_serialize_datetime
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--ignore', nargs="*", type=str, default=[])
+parser.add_argument('--kbpw', required=True, type=str)
+parser.add_argument('--kbuser', required=True, type=str)
 args = parser.parse_args()
 
 
@@ -24,8 +26,6 @@ def main():
     # Market value changes
     with open('mw_changes.json', 'w') as f:
         f.writelines(json.dumps(get_players_mw_change(manager)))
-
-    exit()
 
     # Turnover data
     turnovers = []

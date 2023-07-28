@@ -1,4 +1,3 @@
-import os
 import time
 
 from kickbase_api.kickbase import Kickbase
@@ -13,7 +12,7 @@ class ApiManager:
 
         # Login
         self.api = Kickbase()
-        _, leagues = self.api.login(os.environ.get('KB_MAIL'), os.environ.get('KB_PW'))
+        _, leagues = self.api.login(args.kbuser, args.kbpw)
 
         # Meta
         self.league = leagues[0]  # Might need to be set manually if account is in multiple leagues/challenges
