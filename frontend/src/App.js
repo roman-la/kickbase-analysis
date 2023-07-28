@@ -19,6 +19,7 @@ import timestamp from './data/timestamp.json'
 import TransferRevenueLineChart from './components/TransferRevenueLineChart'
 import LineupPlanner from "./components/LineupPlanner"
 import HelpIcon from './components/HelpIcon'
+import MarketValueChangesTable from './components/MarketValueChangesTable'
 
 const darkTheme = createTheme({ palette: { mode: 'dark' } })
 const lightTheme = createTheme({ palette: { mode: 'light' } })
@@ -52,6 +53,10 @@ function App() {
               <Paper sx={{ marginTop: '25px' }} elevation={5}>
                 <Typography variant="h4" sx={{ padding: '15px' }}>Transfermarkt</Typography>
                 <MarketTable />
+              </Paper>
+              <Paper sx={{ marginTop: '25px' }} elevation={5}>
+                <Typography variant="h4" sx={{ padding: '15px' }}>Marktwertveränderungen</Typography>
+                <MarketValueChangesTable />
               </Paper>
               {/* Re-enable when matchdays start
               <Paper sx={{ marginTop: '25px' }} elevation={5}>
