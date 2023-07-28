@@ -1,0 +1,49 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python application
+
+on:
+  push:
+    branches: [ "main" ]
+  schedule:
+    - cron: '10 9/12 * * *'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.9"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pipenv
+        pipenv install
+    - name: Run code
+      run: |
+        python -m pipenv run python main.py
+      env:
+        KB_MAIL: ${{ secrets.KB_MAIL }}
+        KB_PW: ${{ secrets.KB_PW }}
+        BOT_NAME: ${{ secrets.BOT_NAME }}
+    - name: Deploy
+      run: |
+        git config --global user.name $user_name
+        git config --global user.email $user_email
+        git clone https://${token}@github.com/roman-la/kb-analysis
+        rm ./kb-analysis/src/data/*.json
+        cp *.json ./kb-analysis/src/data/
+        cd ./kb-analysis
+        git add ./src/data/
+        git commit -m "data update"
+        git push
+      env:
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        token: ${{ secrets.TOKEN }}
