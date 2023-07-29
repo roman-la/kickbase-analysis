@@ -1,17 +1,17 @@
 **For educational and non-profit uses only. All trademarks, logos and brand names are the property of their respective owners.**
 
-# kb-analysis
+# kickbase-analysis
 
 This repository contains some python code for retrieving data from the kickbase API and also a react web app for visualization.
 
 ## Deployment with GitHub Pages 
 
-The data collection and building of the web app is automated by cron jobs and runs daily. The results are published to this GitHub Pages website https://roman-la.github.io/kb-analysis/.
+The data collection and building of the web app is automated by cron jobs and runs daily. The results are published to this GitHub Pages website https://roman-la.github.io/kickbase-analysis/.
 If you are interested in how I set it up, check out this guide https://github.com/gitname/react-gh-pages.
 
 ## Run locally
 
-If you are interested in running the code for your own league locally, follow this small guide. But keep in mind, that there could occur some problems if your account is part of several leagues or challenges. In that case, you might need to make a small adaption to this [line](https://github.com/roman-la/kb-analysis/blob/4b2c616f55a4fa9ddc1e177538ad8218bf560482/data/utility/api_manager.py#L18).
+If you are interested in running the code for your own league locally, follow this small guide. But keep in mind, that there could occur some problems if your account is part of several leagues or challenges. In that case, you might need to make a small adaption to the file data/api_manager.py.
 
 Assuming you have python 3.10 already setup, run the following commands to setup the environment and run the code for data collection:
 ```
