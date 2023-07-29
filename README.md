@@ -6,7 +6,7 @@ This repository contains some python code for retrieving data from the kickbase 
 
 ## Deployment with GitHub Pages 
 
-The data collection and building of the web app is automated by cron jobs and runs daily. The results are published to this GitHub Pages website https://roman-la.github.io/kickbase-analysis/.
+The data collection and building of the web app is automated by cron jobs and runs daily. The results are published to this GitHub Pages website https://roman-la.github.io/kb-analysis/.
 If you are interested in how I set it up, check out this guide https://github.com/gitname/react-gh-pages.
 
 ## Run locally
