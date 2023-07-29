@@ -6,7 +6,7 @@ This repository contains some python code for retrieving data from the kickbase 
 
 ## Deployment with GitHub Pages 
 
-The data collection and building of the web app is automated by cron jobs and runs daily. The results are published to this GitHub Pages website https://roman-la.github.io/kb-analysis/.
+The data collection and building of the web app is automated by cron jobs and runs daily. The results are published to this GitHub Pages website https://roman-la.github.io/kickbase-analysis/.
 If you are interested in how I set it up, check out this guide https://github.com/gitname/react-gh-pages.
 
 ## Run locally
@@ -26,7 +26,7 @@ The resulting .json files need to be copied to the frontend folder:
 cp data/*.json frontend/src/data
 ```
 
-After that, assuming you have Node 18.x and npm setup, run the following commands to start the development server (reachable under http://localhost:3000/kb-analysis):
+After that, assuming you have Node 18.x and npm setup, run the following commands to start the development server (reachable under http://localhost:3000/kickbase-analysis):
 ```
 cd frontend/
 npm install
