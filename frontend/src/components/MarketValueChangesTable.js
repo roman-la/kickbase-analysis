@@ -39,7 +39,7 @@ function MarketValueChangesTable() {
         },
         {
             field: 'oneDayAgo',
-            headerName: 'vor 1 Tag',
+            headerName: 'Heute',
             type: 'number',
             flex: 2,
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
@@ -55,7 +55,7 @@ function MarketValueChangesTable() {
         },
         {
             field: 'twoDaysAgo',
-            headerName: 'vor 2 Tagen',
+            headerName: 'Gestern',
             type: 'number',
             flex: 2,
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
@@ -71,7 +71,7 @@ function MarketValueChangesTable() {
         },
         {
             field: 'threeDaysAgo',
-            headerName: 'vor 3 Tagen',
+            headerName: 'Vorgestern',
             type: 'number',
             flex: 2,
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
