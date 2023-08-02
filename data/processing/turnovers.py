@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from dateutil import parser
 
@@ -53,7 +53,7 @@ def get_turnovers(manager, user_id: int, user_name: str):
             continue
 
         if transfer not in [turnover[1] for turnover in turnovers]:
-            date = datetime.datetime(2022, 7, 1, tzinfo=TIMEZONE_DE)
+            date = datetime(2023, 7, 1, tzinfo=TIMEZONE_DE)
             buy_transfer = {'date': date,
                             'first_name': transfer['first_name'],
                             'last_name': transfer['last_name'],
