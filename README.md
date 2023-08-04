@@ -11,15 +11,18 @@ If you are interested in how I set it up, check out this guide https://github.co
 
 ## Run locally
 
-If you are interested in running the code for your own league locally, follow this small guide. But keep in mind, that there could occur some problems if your account is part of several leagues or challenges. In that case, you might need to make a small adaption to the file data/api_manager.py.
+If you are interested in running the code for your own league locally, follow this small guide.
 
-Assuming you have python 3.10 already setup, run the following commands to setup the environment and run the code for data collection:
+Assuming you have Python (3.10) already setup, run the following commands to setup the environment and run the code for data collection:
 ```
 cd data/
 pip install pipenv
 pipenv install
-pipenv run main.py --kbuser your@mail.com --kbpw yourpassword123
+pipenv run main.py --kbuser your@mail.com --kbpw yourpassword123 --league="Your League Name" --ignore ManagerX ManagerY
 ```
+
+Giving the name of your league is optional. If not set, your first league (probably the one you are part of the longest time) will be used.
+Also optional is the `--ignore` parameter. With that you can specify one or more manager names to be ignored for data collection (e.g. for inactive or bot acocunts).
 
 The resulting .json files need to be copied to the frontend folder:
 ```

@@ -15,9 +15,10 @@ from utility.api_manager import ApiManager
 from utility.util import json_serialize_datetime
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--ignore', nargs="*", type=str, default=[])
+parser.add_argument('--ignore', required=False, nargs="+", type=str, default=[])
 parser.add_argument('--kbpw', required=True, type=str)
 parser.add_argument('--kbuser', required=True, type=str)
+parser.add_argument('--league', required=False, type=str)
 args = parser.parse_args()
 
 

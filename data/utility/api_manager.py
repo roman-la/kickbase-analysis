@@ -15,7 +15,17 @@ class ApiManager:
         _, leagues = self.api.login(args.kbuser, args.kbpw)
 
         # Meta
-        self.league = leagues[0]  # Might need to be set manually if account is in multiple leagues/challenges
+        if args.league:
+            self.league = None
+            for league in leagues:
+                if league.name == args.league:
+                    self.league = league
+
+            if self.league is None:
+                raise Exception(f'League "{args.league}" not found.')
+        else:
+            self.league = leagues[0]
+
         self.users = [user for user in self.api.league_users(self.league)
                       if user.name not in args.ignore]
 
