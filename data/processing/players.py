@@ -69,6 +69,11 @@ def get_players_mw_change(manager):
         for player in manager.api.team_players(team_id):
             player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats')
 
+            if 'leaguePlayer' in player_stats.keys():
+                manager_name = player_stats['leaguePlayer']['userName']
+            else:
+                manager_name = 'Computer'
+
             market_values = player_stats['marketValues']
             market_values.reverse()
 
@@ -80,9 +85,10 @@ def get_players_mw_change(manager):
                             'first_name': player.first_name,
                             'last_name': player.last_name,
                             'market_value': player_stats['marketValue'],
-                            'one_day_ago': last_mw[0] - last_mw[1],
-                            'two_days_ago': last_mw[1] - last_mw[2],
-                            'three_days_ago': last_mw[2] - last_mw[3],
-                            'team_id': player.team_id})
+                            'today': last_mw[0] - last_mw[1],
+                            'one_day_ago': last_mw[1] - last_mw[2],
+                            'two_days_ago': last_mw[2] - last_mw[3],
+                            'team_id': player.team_id,
+                            'manager': manager_name})
 
     return players

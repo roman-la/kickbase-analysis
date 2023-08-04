@@ -5,7 +5,8 @@ from datetime import datetime
 from dateutil.tz import tzlocal
 
 from processing.market import get_market_players
-from processing.players import get_free_players,get_players_mw_change
+from processing.players import get_free_players
+from processing.players import get_players_mw_change
 from processing.players import get_taken_players
 from processing.revenue import calculate_revenue_data_daily
 from processing.revenue import calculate_team_value_per_match_day

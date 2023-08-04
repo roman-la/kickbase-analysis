@@ -38,7 +38,7 @@ function MarketValueChangesTable() {
             cellClassName: 'font-tabular-nums'
         },
         {
-            field: 'oneDayAgo',
+            field: 'today',
             headerName: 'Heute',
             type: 'number',
             flex: 2,
@@ -54,7 +54,7 @@ function MarketValueChangesTable() {
             }
         },
         {
-            field: 'twoDaysAgo',
+            field: 'oneDayAgo',
             headerName: 'Gestern',
             type: 'number',
             flex: 2,
@@ -70,7 +70,7 @@ function MarketValueChangesTable() {
             }
         },
         {
-            field: 'threeDaysAgo',
+            field: 'twoDaysAgo',
             headerName: 'Vorgestern',
             type: 'number',
             flex: 2,
@@ -84,6 +84,13 @@ function MarketValueChangesTable() {
                 else
                     return 'font-tabular-nums'
             }
+        },
+        {
+            field: 'manager',
+            headerName: 'Manager',
+            headerAlign: 'center',
+            align: 'center',
+            flex: 2
         }
     ]
 
@@ -93,10 +100,11 @@ function MarketValueChangesTable() {
             teamLogo: process.env.PUBLIC_URL + "/images/" + row.team_id + ".png",
             firstName: row.first_name,
             lastName: row.last_name,
+            today: row.today,
             oneDayAgo: row.one_day_ago,
             twoDaysAgo: row.two_days_ago,
-            threeDaysAgo: row.three_days_ago,
-            marketValue: row.market_value
+            marketValue: row.market_value,
+            manager: row.manager
         }
     ))
 
@@ -112,7 +120,7 @@ function MarketValueChangesTable() {
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
-                initialState={{ sorting: { sortModel: [{ field: 'oneDayAgo', sort: 'desc' }] } }}
+                initialState={{ sorting: { sortModel: [{ field: 'today', sort: 'desc' }] } }}
             />
         </Box>
     )
