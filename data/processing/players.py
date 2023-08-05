@@ -1,3 +1,6 @@
+from concurrent.futures import ThreadPoolExecutor
+from itertools import repeat
+
 from datetime import datetime
 
 import pytz
@@ -61,34 +64,44 @@ def get_free_players(manager, taken_players):
 
     return free_players
 
+# worker - gets all player data of a given team
+def get_player_data(manager, team_id):
+    players_data = []
+    for player in manager.api.team_players(team_id):
+        player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats')
 
+        if 'leaguePlayer' in player_stats.keys():
+            manager_name = player_stats['leaguePlayer']['userName']
+        else:
+            manager_name = 'Computer'
+
+        market_values = player_stats['marketValues']
+        market_values.reverse()
+
+        last_mw = {}
+        for i in range(5):
+            last_mw[i] = market_values[i]['m']
+
+        players_data.append({'player_id': player.id,
+                             'first_name': player.first_name,
+                             'last_name': player.last_name,
+                             'market_value': player_stats['marketValue'],
+                             'one_day_ago': last_mw[0] - last_mw[1],
+                             'two_days_ago': last_mw[1] - last_mw[2],
+                             'three_days_ago': last_mw[2] - last_mw[3],
+                             'team_id': player.team_id,
+                             'manager': manager_name})
+
+    return players_data
+
+# gets mw changes of all players - split work to one team per thread
 def get_players_mw_change(manager):
     players = []
+    with ThreadPoolExecutor() as executor:
+        team_ids = constants.TEAM_IDS
+        players_data = executor.map(get_player_data, repeat(manager), team_ids)
 
-    for team_id in constants.TEAM_IDS:
-        for player in manager.api.team_players(team_id):
-            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats')
-
-            if 'leaguePlayer' in player_stats.keys():
-                manager_name = player_stats['leaguePlayer']['userName']
-            else:
-                manager_name = 'Computer'
-
-            market_values = player_stats['marketValues']
-            market_values.reverse()
-
-            last_mw = {}
-            for i in range(5):
-                last_mw[i] = market_values[i]['m']
-
-            players.append({'player_id': player.id,
-                            'first_name': player.first_name,
-                            'last_name': player.last_name,
-                            'market_value': player_stats['marketValue'],
-                            'today': last_mw[0] - last_mw[1],
-                            'one_day_ago': last_mw[1] - last_mw[2],
-                            'two_days_ago': last_mw[2] - last_mw[3],
-                            'team_id': player.team_id,
-                            'manager': manager_name})
+        for team_data in players_data:
+            players.extend(team_data)
 
     return players
