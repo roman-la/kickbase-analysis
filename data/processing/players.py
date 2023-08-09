@@ -1,48 +1,59 @@
+import json
 from datetime import datetime
 
 import pytz
 from dateutil import parser
 
 from utility import constants
+from utility.api_manager import ApiManager
+from utility.util import json_serialize_datetime
 
 
-def get_taken_players(manager, user_id: int, user_name: str):
-    taken_players = []
+def get_taken_players(args, executed_queries):
+    manager = ApiManager(args)
 
-    transfers = manager.get_transfers_raw(manager.league.id, user_id)
-    transfers = sorted(transfers, key=lambda e: e['date'])
-    transfers.reverse()
+    result = []
 
-    for player in manager.api.league_user_players(manager.league, user_id):
-        # Default values in case the player got randomly assigned on league join
-        buy_value = 0
-        bought_date = datetime(2023, 7, 1, tzinfo=pytz.timezone('Europe/Berlin'))
+    for user in manager.users:
+        taken_players = []
 
-        # Get date and value of newest buy transfer for that player
-        for transfer in transfers:
-            if transfer['type'] != 12 or transfer['meta']['pid'] != player.id:
-                continue
+        transfers = manager.get_transfers_raw(user.id, executed_queries)
+        transfers = sorted(transfers, key=lambda e: e['date'])
+        transfers.reverse()
 
-            buy_value = transfer['meta']['p']
-            bought_date = parser.parse(transfer['date'])
+        for player in manager.api.league_user_players(manager.league, user.id):
+            # Default values in case the player got randomly assigned on league join
+            buy_value = 0
+            bought_date = datetime(2023, 7, 1, tzinfo=pytz.timezone('Europe/Berlin'))
 
-            break
+            # Get date and value of newest buy transfer for that player
+            for transfer in transfers:
+                if transfer['type'] != 12 or transfer['meta']['pid'] != player.id:
+                    continue
 
-        taken_players.append({'first_name': player.first_name,
-                              'last_name': player.last_name,
-                              'team_id': player.team_id,
-                              'market_value': player.market_value,
-                              'buy_price': buy_value,
-                              'user': user_name,
-                              'player_id': player.id,
-                              'date': bought_date,
-                              'position': constants.POSITIONS[player.position],
-                              'trend': player.market_value_trend})
+                buy_value = transfer['meta']['p']
+                bought_date = parser.parse(transfer['date'])
 
-    return taken_players
+                break
+
+            taken_players.append({'first_name': player.first_name,
+                                  'last_name': player.last_name,
+                                  'team_id': player.team_id,
+                                  'market_value': player.market_value,
+                                  'buy_price': buy_value,
+                                  'user': user.name,
+                                  'player_id': player.id,
+                                  'date': bought_date,
+                                  'position': constants.POSITIONS[player.position],
+                                  'trend': player.market_value_trend})
+
+        with open('taken_players.json', 'w') as f:
+            f.writelines(json.dumps(result, default=json_serialize_datetime))
+
+        get_free_players(result, manager)
 
 
-def get_free_players(manager, taken_players):
+def get_free_players(taken_players, manager):
     free_players = []
 
     taken_player_ids = [x['player_id'] for x in taken_players]
@@ -59,15 +70,19 @@ def get_free_players(manager, taken_players):
                                      'position': constants.POSITIONS[player.position],
                                      'trend': player.market_value_trend})
 
-    return free_players
+    # TODO
+    with open('free_players.json', 'w') as f:
+        f.writelines(json.dumps(free_players))
 
 
-def get_players_mw_change(manager):
+def get_players_mw_change(args, executed_queries):
+    manager = ApiManager(args)
+
     players = []
 
     for team_id in constants.TEAM_IDS:
         for player in manager.api.team_players(team_id):
-            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats')
+            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats', executed_queries)
 
             if 'leaguePlayer' in player_stats.keys():
                 manager_name = player_stats['leaguePlayer']['userName']
@@ -91,4 +106,5 @@ def get_players_mw_change(manager):
                             'team_id': player.team_id,
                             'manager': manager_name})
 
-    return players
+    with open('mw_changes.json', 'w') as f:
+        f.writelines(json.dumps(players))

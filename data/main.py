@@ -1,18 +1,16 @@
 import argparse
 import json
+import multiprocessing as mp
+import time
 from datetime import datetime
 
 from dateutil.tz import tzlocal
 
 from processing.market import get_market_players
-from processing.players import get_free_players
 from processing.players import get_players_mw_change
 from processing.players import get_taken_players
-from processing.revenue import calculate_revenue_data_daily
 from processing.revenue import calculate_team_value_per_match_day
 from processing.turnovers import get_turnovers
-from utility.api_manager import ApiManager
-from utility.util import json_serialize_datetime
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--ignore', required=False, nargs="+", type=str, default=[])
@@ -23,51 +21,29 @@ args = parser.parse_args()
 
 
 def main():
-    manager = ApiManager(args)
+    start = time.time()
 
-    # Market value changes
-    with open('mw_changes.json', 'w') as f:
-        f.writelines(json.dumps(get_players_mw_change(manager)))
+    with mp.Manager() as mp_manager:
+        executed_queries = mp_manager.dict()
 
-    # Turnover data
-    turnovers = []
-    for user in manager.users:
-        turnovers = turnovers + get_turnovers(manager, user.id, user.name)
-    with open('turnovers.json', 'w') as f:
-        f.writelines(json.dumps(turnovers, default=json_serialize_datetime))
+        processes = [mp.Process(target=get_turnovers, args=(args, executed_queries)),
+                     mp.Process(target=get_taken_players, args=(args, executed_queries)),
+                     mp.Process(target=get_players_mw_change, args=(args, executed_queries)),
+                     mp.Process(target=calculate_team_value_per_match_day, args=(args, executed_queries)),
+                     mp.Process(target=get_market_players, args=(args, executed_queries))]
 
-    # Taken players data
-    taken_players = []
-    for user in manager.users:
-        taken_players = taken_players + get_taken_players(manager, user.id, user.name)
-    with open('taken_players.json', 'w') as f:
-        f.writelines(json.dumps(taken_players, default=json_serialize_datetime))
+        for process in processes:
+            process.start()
 
-    # Team value data
-    team_values = {}
-    for user in manager.users:
-        team_values[user.name] = calculate_team_value_per_match_day(manager, user.id)
-    with open('team_values.json', 'w') as f:
-        f.writelines(json.dumps(team_values))
+        for process in processes:
+            process.join()
 
-    # Free players data
-    with open('free_players.json', 'w') as f:
-        free_players = get_free_players(manager, taken_players)
-        f.writelines(json.dumps(free_players))
-
-    # Transfer revenue data
-    with open('revenue_sum.json', 'w') as f:
-        revenue_data = calculate_revenue_data_daily(manager, turnovers)
-        f.writelines(json.dumps(revenue_data))
-
-    # Market data
-    with open('market.json', 'w') as f:
-        market_players = get_market_players(manager)
-        f.writelines(json.dumps(market_players, default=json_serialize_datetime))
-
-    # Timestamp
+    # Timestamp for frontend
     with open('timestamp.json', 'w') as f:
         f.writelines(json.dumps({'time': datetime.now(tz=tzlocal()).isoformat()}))
 
+    print(f'Execution time: {time.time() - start}s')
 
-main()
+
+if __name__ == '__main__':
+    main()
