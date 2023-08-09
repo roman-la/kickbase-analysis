@@ -3,6 +3,7 @@ import json
 import multiprocessing as mp
 import time
 from datetime import datetime
+from multiprocessing.pool import Pool
 
 from dateutil.tz import tzlocal
 
@@ -23,20 +24,19 @@ args = parser.parse_args()
 def main():
     start = time.time()
 
-    with mp.Manager() as mp_manager:
-        executed_queries = mp_manager.dict()
+    with mp.Manager() as manager:
+        executed_queries = manager.dict()
 
-        processes = [mp.Process(target=get_turnovers, args=(args, executed_queries)),
-                     mp.Process(target=get_taken_players, args=(args, executed_queries)),
-                     mp.Process(target=get_players_mw_change, args=(args, executed_queries)),
-                     mp.Process(target=calculate_team_value_per_match_day, args=(args, executed_queries)),
-                     mp.Process(target=get_market_players, args=(args, executed_queries))]
+        pool = Pool(processes=mp.cpu_count() - 1)
 
-        for process in processes:
-            process.start()
+        pool.apply_async(get_turnovers, (args, executed_queries))
+        pool.apply_async(get_taken_players, (args, executed_queries))
+        pool.apply_async(get_players_mw_change, (args, executed_queries))
+        pool.apply_async(calculate_team_value_per_match_day, (args, executed_queries))
+        pool.apply_async(get_market_players, (args, executed_queries))
 
-        for process in processes:
-            process.join()
+        pool.close()
+        pool.join()
 
     # Timestamp for frontend
     with open('timestamp.json', 'w') as f:
