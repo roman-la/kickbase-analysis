@@ -23,8 +23,8 @@ args = parser.parse_args()
 
 def main():
     start = time.time()
+    
     pool = Pool(mp.cpu_count() - 1)
-
     with mp.Manager() as manager:
         cache = manager.dict()
         lock = manager.Lock()
