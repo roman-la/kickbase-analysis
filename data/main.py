@@ -28,12 +28,13 @@ def main():
     with mp.Manager() as manager:
         cache = manager.dict()
         lock = manager.Lock()
+        throttle = manager.Value('f', .1)
 
-        pool.apply_async(get_turnovers, (args, cache, lock))
-        pool.apply_async(get_taken_players, (args, cache, lock))
-        pool.apply_async(get_players_mw_change, (args, cache, lock))
-        pool.apply_async(calculate_team_value_per_match_day, (args, cache, lock))
-        pool.apply_async(get_market_players, (args, cache, lock))
+        pool.apply_async(get_turnovers, (args, cache, lock, throttle))
+        pool.apply_async(get_taken_players, (args, cache, lock, throttle))
+        pool.apply_async(get_players_mw_change, (args, cache, lock, throttle))
+        pool.apply_async(calculate_team_value_per_match_day, (args, cache, lock, throttle))
+        pool.apply_async(get_market_players, (args, cache, lock, throttle))
 
         pool.close()
         pool.join()

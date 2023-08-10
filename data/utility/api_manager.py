@@ -1,3 +1,6 @@
+import multiprocessing as mp
+import time
+
 from kickbase_api.kickbase import Kickbase
 
 
@@ -23,25 +26,34 @@ class ApiManager:
         self.users = [user for user in self.api.league_users(self.league)
                       if user.name not in args.ignore]
 
-    def get(self, url: str, cache, lock):
-        # lock.acquire()
+    def get(self, url: str, cache, lock, throttle):
+        lock.acquire()
         if url not in cache.keys():
+            time.sleep(throttle.value)
+
+            delay = time.time()
             cache[url] = self.api._do_get(url, True).json()
-        # lock.release()
+            delay = time.time() - delay
+
+            # TODO: "mp.cpu_count() - 1" is not correct here
+            # There could be less processes running, which would increase the throttle unnecessarily
+            # Real number of running processes is needed
+            throttle.value = (throttle.value + (delay / (mp.cpu_count() - 1))) / 2
+        lock.release()
 
         return cache[url]
 
-    def get_transfers_raw(self, user_id, cache, lock):
+    def get_transfers_raw(self, user_id, cache, lock, throttle):
         transfers_raw = []
         offset = 0
 
         response = self.get(f'/leagues/{self.league.id}/users/{user_id}/feed?filter=12&start={offset}',
-                            cache, lock)
+                            cache, lock, throttle)
 
         while response['items']:
             transfers_raw = transfers_raw + response['items']
             response = self.get(f'/leagues/{self.league.id}/users/{user_id}/feed?filter=12&start={offset}',
-                                cache, lock)
+                                cache, lock, throttle)
             offset += 25
 
         return transfers_raw

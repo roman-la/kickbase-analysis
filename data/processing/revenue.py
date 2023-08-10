@@ -40,7 +40,7 @@ def calculate_revenue_data_daily(turnovers, manager):
         f.writelines(json.dumps(data))
 
 
-def calculate_team_value_per_match_day(args, cache, lock):
+def calculate_team_value_per_match_day(args, cache, lock, throttle):
     manager = ApiManager(args)
 
     result = {}
@@ -67,7 +67,7 @@ def calculate_team_value_per_match_day(args, cache, lock):
         for match_day, player_ids in match_day_player_ids.items():
             for player_id in set(player_ids):
                 player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player_id}/stats', cache,
-                                           lock)
+                                           lock, throttle)
 
                 player_value_on_match_day = 0
                 if MATCH_DAYS[match_day].date() == datetime.now().date():
