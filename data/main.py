@@ -26,14 +26,14 @@ def main():
     pool = Pool(mp.cpu_count() - 1)
 
     with mp.Manager() as manager:
-        executed_queries = manager.dict()
+        cache = manager.dict()
         lock = manager.Lock()
 
-        pool.apply_async(get_turnovers, (args, executed_queries, lock))
-        pool.apply_async(get_taken_players, (args, executed_queries, lock))
-        pool.apply_async(get_players_mw_change, (args, executed_queries, lock))
-        pool.apply_async(calculate_team_value_per_match_day, (args, executed_queries, lock))
-        pool.apply_async(get_market_players, (args, executed_queries, lock))
+        pool.apply_async(get_turnovers, (args, cache, lock))
+        pool.apply_async(get_taken_players, (args, cache, lock))
+        pool.apply_async(get_players_mw_change, (args, cache, lock))
+        pool.apply_async(calculate_team_value_per_match_day, (args, cache, lock))
+        pool.apply_async(get_market_players, (args, cache, lock))
 
         pool.close()
         pool.join()

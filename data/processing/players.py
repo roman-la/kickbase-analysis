@@ -9,7 +9,7 @@ from utility.api_manager import ApiManager
 from utility.util import json_serialize_datetime
 
 
-def get_taken_players(args, executed_queries, lock):
+def get_taken_players(args, cache, lock):
     manager = ApiManager(args)
 
     result = []
@@ -17,7 +17,7 @@ def get_taken_players(args, executed_queries, lock):
     for user in manager.users:
         taken_players = []
 
-        transfers = manager.get_transfers_raw(user.id, executed_queries, lock)
+        transfers = manager.get_transfers_raw(user.id, cache, lock)
         transfers = sorted(transfers, key=lambda e: e['date'])
         transfers.reverse()
 
@@ -75,14 +75,14 @@ def get_free_players(taken_players, manager):
         f.writelines(json.dumps(free_players))
 
 
-def get_players_mw_change(args, executed_queries, lock):
+def get_players_mw_change(args, cache, lock):
     manager = ApiManager(args)
 
     players = []
 
     for team_id in constants.TEAM_IDS:
         for player in manager.api.team_players(team_id):
-            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats', executed_queries,
+            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats', cache,
                                        lock)
 
             if 'leaguePlayer' in player_stats.keys():

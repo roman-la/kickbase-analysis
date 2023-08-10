@@ -40,7 +40,7 @@ def calculate_revenue_data_daily(turnovers, manager):
         f.writelines(json.dumps(data))
 
 
-def calculate_team_value_per_match_day(args, executed_queries, lock):
+def calculate_team_value_per_match_day(args, cache, lock):
     manager = ApiManager(args)
 
     result = {}
@@ -52,7 +52,7 @@ def calculate_team_value_per_match_day(args, executed_queries, lock):
         match_day_player_ids = {match_day: [] for match_day in range(1, last_match_day + 1)}
         for match_day in match_day_player_ids:
             line_up = manager.get(f'/v2/leagues/{manager.league.id}/table/{user.id}/players?matchDay={match_day}',
-                                  executed_queries, lock)
+                                  cache, lock)
 
             # In line up
             for player in line_up['lp']:
@@ -66,7 +66,7 @@ def calculate_team_value_per_match_day(args, executed_queries, lock):
         team_value = {match_day: 0 for match_day in range(1, last_match_day + 1)}
         for match_day, player_ids in match_day_player_ids.items():
             for player_id in set(player_ids):
-                player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player_id}/stats', executed_queries,
+                player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player_id}/stats', cache,
                                            lock)
 
                 player_value_on_match_day = 0

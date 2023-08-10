@@ -10,14 +10,14 @@ from utility.api_manager import ApiManager
 from utility.util import json_serialize_datetime
 
 
-def get_market_players(args, executed_queries, lock):
+def get_market_players(args, cache, lock):
     manager = ApiManager(args)
 
     players = []
 
     for player in manager.api.market(manager.league).players:
         if not player.username:
-            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats', executed_queries, lock)
+            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats', cache, lock)
 
             expiration_time = (datetime.now(timezone('Europe/Berlin')) + timedelta(seconds=int(player.expiry)))
             players.append({'first_name': player.first_name,
