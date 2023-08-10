@@ -35,10 +35,10 @@ class ApiManager:
             cache[url] = self.api._do_get(url, True).json()
             delay = time.time() - delay
 
-            # TODO: "mp.cpu_count() - 1" is not correct here
+            # TODO: Neither "mp.cpu_count() - 1" nor 5 is not correct here
             # There could be less processes running, which would increase the throttle unnecessarily
             # Real number of running processes is needed
-            throttle.value = (throttle.value + (delay / (mp.cpu_count() - 1))) / 2
+            throttle.value = (throttle.value + (delay / 5)) / 2
         lock.release()
 
         return cache[url]
