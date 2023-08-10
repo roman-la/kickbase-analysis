@@ -47,10 +47,12 @@ def get_taken_players(args, cache, lock, throttle):
                                   'position': constants.POSITIONS[player.position],
                                   'trend': player.market_value_trend})
 
-        with open('taken_players.json', 'w') as f:
-            f.writelines(json.dumps(result, default=json_serialize_datetime))
+        result = result + taken_players
 
-        get_free_players(result, manager)
+    with open('taken_players.json', 'w') as f:
+        f.writelines(json.dumps(result, default=json_serialize_datetime))
+
+    get_free_players(result, manager)
 
 
 def get_free_players(taken_players, manager):
