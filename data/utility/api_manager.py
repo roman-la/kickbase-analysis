@@ -1,3 +1,4 @@
+import multiprocessing as mp
 import time
 
 from kickbase_api.kickbase import Kickbase
@@ -5,16 +6,11 @@ from kickbase_api.kickbase import Kickbase
 
 class ApiManager:
     def __init__(self, args):
-        # Query cache
-        self.executed_queries = {}
-        self.last_call_timestamp = 0
-        self.throttle_seconds = .1
-
-        # Login
+        # Kickbase login
         self.api = Kickbase()
         _, leagues = self.api.login(args.kbuser, args.kbpw)
 
-        # Meta
+        # Setup league
         if args.league:
             self.league = None
             for league in leagues:
@@ -26,29 +22,38 @@ class ApiManager:
         else:
             self.league = leagues[0]
 
+        # Setup user list
         self.users = [user for user in self.api.league_users(self.league)
                       if user.name not in args.ignore]
 
-    # Simple caching and throttle of GETs to reduce load on server
-    def get(self, endpoint: str):
-        if endpoint not in self.executed_queries:
-            while time.time() - self.last_call_timestamp < self.throttle_seconds:
-                time.sleep(.1)
+    def get(self, url: str, cache, lock, throttle):
+        lock.acquire()
+        if url not in cache.keys():
+            time.sleep(throttle.value)
 
-            self.executed_queries[endpoint] = self.api._do_get(endpoint, True).json()
-            self.last_call_timestamp = time.time()
+            delay = time.time()
+            cache[url] = self.api._do_get(url, True).json()
+            delay = time.time() - delay
 
-        return self.executed_queries[endpoint]
+            # TODO: "mp.cpu_count() - 1" is not correct here
+            # There could be less processes running, which would increase the throttle unnecessarily
+            # Real number of running processes is needed
+            throttle.value = (throttle.value + (delay / (mp.cpu_count() - 1))) / 2
+        lock.release()
 
-    def get_transfers_raw(self, league_id, user_id):
+        return cache[url]
+
+    def get_transfers_raw(self, user_id, cache, lock, throttle):
         transfers_raw = []
         offset = 0
 
-        response = self.get(f'/leagues/{league_id}/users/{user_id}/feed?filter=12&start={offset}')
+        response = self.get(f'/leagues/{self.league.id}/users/{user_id}/feed?filter=12&start={offset}',
+                            cache, lock, throttle)
 
         while response['items']:
             transfers_raw = transfers_raw + response['items']
-            response = self.get(f'/leagues/{league_id}/users/{user_id}/feed?filter=12&start={offset}')
+            response = self.get(f'/leagues/{self.league.id}/users/{user_id}/feed?filter=12&start={offset}',
+                                cache, lock, throttle)
             offset += 25
 
         return transfers_raw

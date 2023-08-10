@@ -1,13 +1,15 @@
+import json
 from datetime import datetime
 
 import pandas as pd
 from dateutil import parser
 
+from utility.api_manager import ApiManager
 from utility.constants import MATCH_DAYS
 from utility.constants import TIMEZONE_DE
 
 
-def calculate_revenue_data_daily(manager, turnovers):
+def calculate_revenue_data_daily(turnovers, manager):
     user_transfer_revenue = {user.name: [] for user in manager.users}
     for buy, sell in turnovers:
         revenue = sell['value'] - buy['value']
@@ -34,42 +36,52 @@ def calculate_revenue_data_daily(manager, turnovers):
         for entry in df.to_numpy().tolist():
             data[user].append((entry[0], entry[1]))
 
-    return data
+    with open('revenue_sum.json', 'w') as f:
+        f.writelines(json.dumps(data))
 
 
-def calculate_team_value_per_match_day(manager, user_id: str):
-    # Get last match day
-    last_match_day = manager.api.league_stats(manager.league).current_day
+def calculate_team_value_per_match_day(args, cache, lock, throttle):
+    manager = ApiManager(args)
 
-    # Get list of player ids per match
-    match_day_player_ids = {match_day: [] for match_day in range(1, last_match_day + 1)}
-    for match_day in match_day_player_ids:
-        line_up = manager.get(f'/v2/leagues/{manager.league.id}/table/{user_id}/players?matchDay={match_day}')
+    result = {}
+    for user in manager.users:
+        # Get last match day
+        last_match_day = manager.api.league_stats(manager.league).current_day
 
-        # In line up
-        for player in line_up['lp']:
-            match_day_player_ids[match_day].append(player['i'])
+        # Get list of player ids per match
+        match_day_player_ids = {match_day: [] for match_day in range(1, last_match_day + 1)}
+        for match_day in match_day_player_ids:
+            line_up = manager.get(f'/v2/leagues/{manager.league.id}/table/{user.id}/players?matchDay={match_day}',
+                                  cache, lock)
 
-        # Not in line up
-        for player in line_up['nlp']:
-            match_day_player_ids[match_day].append(player['i'])
+            # In line up
+            for player in line_up['lp']:
+                match_day_player_ids[match_day].append(player['i'])
 
-    # Get sum of player values for each match day
-    team_value = {match_day: 0 for match_day in range(1, last_match_day + 1)}
-    for match_day, player_ids in match_day_player_ids.items():
-        for player_id in set(player_ids):
-            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player_id}/stats')
+            # Not in line up
+            for player in line_up['nlp']:
+                match_day_player_ids[match_day].append(player['i'])
 
-            player_value_on_match_day = 0
-            if MATCH_DAYS[match_day].date() == datetime.now().date():
-                player_value_on_match_day = player_stats['marketValue']
-            else:
-                for entry in player_stats['marketValues']:
-                    if parser.parse(entry['d']).date() <= MATCH_DAYS[match_day].date():
-                        player_value_on_match_day = int(entry['m'])
-                    else:
-                        break
+        # Get sum of player values for each match day
+        team_value = {match_day: 0 for match_day in range(1, last_match_day + 1)}
+        for match_day, player_ids in match_day_player_ids.items():
+            for player_id in set(player_ids):
+                player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player_id}/stats', cache,
+                                           lock, throttle)
 
-            team_value[match_day] += player_value_on_match_day
+                player_value_on_match_day = 0
+                if MATCH_DAYS[match_day].date() == datetime.now().date():
+                    player_value_on_match_day = player_stats['marketValue']
+                else:
+                    for entry in player_stats['marketValues']:
+                        if parser.parse(entry['d']).date() <= MATCH_DAYS[match_day].date():
+                            player_value_on_match_day = int(entry['m'])
+                        else:
+                            break
 
-    return team_value
+                team_value[match_day] += player_value_on_match_day
+
+        result[user.name] = team_value
+
+    with open('team_values.json', 'w') as f:
+        f.writelines(json.dumps(result))
