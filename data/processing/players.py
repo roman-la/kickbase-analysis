@@ -95,17 +95,13 @@ def get_players_mw_change(args, cache, lock, throttle):
             market_values = player_stats['marketValues']
             market_values.reverse()
 
-            last_mw = {}
-            for i in range(5):
-                last_mw[i] = market_values[i]['m']
-
             players.append({'player_id': player.id,
                             'first_name': player.first_name,
                             'last_name': player.last_name,
                             'market_value': player_stats['marketValue'],
-                            'today': last_mw[0] - last_mw[1],
-                            'one_day_ago': last_mw[1] - last_mw[2],
-                            'two_days_ago': last_mw[2] - last_mw[3],
+                            'today': market_values[0]['m'] - market_values[1]['m'],
+                            'one_day_ago': market_values[1]['m'] - market_values[2]['m'],
+                            'two_days_ago': market_values[2]['m'] - market_values[3]['m'],
                             'team_id': player.team_id,
                             'manager': manager_name})
 
