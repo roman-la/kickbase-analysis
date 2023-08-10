@@ -9,7 +9,7 @@ from utility.constants import TIMEZONE_DE
 from utility.util import json_serialize_datetime
 
 
-def get_turnovers(args, executed_queries):
+def get_turnovers(args, executed_queries, lock):
     manager = ApiManager(args)
 
     result = []
@@ -17,7 +17,7 @@ def get_turnovers(args, executed_queries):
     for user in manager.users:
         transfers = []
 
-        for buy in manager.get_transfers_raw(user.id, executed_queries):
+        for buy in manager.get_transfers_raw(user.id, executed_queries, lock):
             transfer_type = 'buy' if buy['type'] == 12 else 'sell'
 
             if 'bn' in buy['meta']:
