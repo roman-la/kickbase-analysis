@@ -4,20 +4,18 @@ from datetime import datetime
 from dateutil import parser
 
 from processing.revenue import calculate_revenue_data_daily
-from utility.api_manager import ApiManager
+from utility.api_manager import manager
 from utility.constants import TIMEZONE_DE
 from utility.util import json_serialize_datetime
 
 
-def get_turnovers(args, cache, lock, throttle):
-    manager = ApiManager(args)
-
+def get_turnovers():
     result = []
 
     for user in manager.users:
         transfers = []
 
-        for buy in manager.get_transfers_raw(user.id, cache, lock, throttle):
+        for buy in manager.get_transfers_raw(user.id):
             transfer_type = 'buy' if buy['type'] == 12 else 'sell'
 
             if 'bn' in buy['meta']:
@@ -80,4 +78,4 @@ def get_turnovers(args, cache, lock, throttle):
     with open('turnovers.json', 'w') as f:
         f.writelines(json.dumps(result, default=json_serialize_datetime))
 
-    calculate_revenue_data_daily(result, manager)
+    calculate_revenue_data_daily(result)

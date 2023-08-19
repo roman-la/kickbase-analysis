@@ -1,9 +1,7 @@
 import argparse
 import json
-import multiprocessing as mp
 import time
 from datetime import datetime
-from multiprocessing.pool import Pool
 
 from dateutil.tz import tzlocal
 
@@ -12,6 +10,7 @@ from processing.players import get_players_mw_change
 from processing.players import get_taken_players
 from processing.revenue import calculate_team_value_per_match_day
 from processing.turnovers import get_turnovers
+from utility.api_manager import manager
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--ignore', required=False, nargs="+", type=str, default=[])
@@ -24,20 +23,13 @@ args = parser.parse_args()
 def main():
     start = time.time()
 
-    pool = Pool(mp.cpu_count() - 1)
-    with mp.Manager() as manager:
-        cache = manager.dict()
-        lock = manager.Lock()
-        throttle = manager.Value('f', .1)
+    manager.init(args)
 
-        pool.apply_async(get_turnovers, (args, cache, lock, throttle))
-        pool.apply_async(get_taken_players, (args, cache, lock, throttle))
-        pool.apply_async(get_players_mw_change, (args, cache, lock, throttle))
-        pool.apply_async(calculate_team_value_per_match_day, (args, cache, lock, throttle))
-        pool.apply_async(get_market_players, (args, cache, lock, throttle))
-
-        pool.close()
-        pool.join()
+    get_turnovers()
+    get_taken_players()
+    get_players_mw_change()
+    calculate_team_value_per_match_day()
+    get_market_players()
 
     # Timestamp for frontend
     # TODO: Possible to use file creation timestamp in frontend, so that this can be removed?

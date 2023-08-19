@@ -5,19 +5,17 @@ import pytz
 from dateutil import parser
 
 from utility import constants
-from utility.api_manager import ApiManager
+from utility.api_manager import manager
 from utility.util import json_serialize_datetime
 
 
-def get_taken_players(args, cache, lock, throttle):
-    manager = ApiManager(args)
-
+def get_taken_players():
     result = []
 
     for user in manager.users:
         taken_players = []
 
-        transfers = manager.get_transfers_raw(user.id, cache, lock, throttle)
+        transfers = manager.get_transfers_raw(user.id)
         transfers = sorted(transfers, key=lambda e: e['date'])
         transfers.reverse()
 
@@ -52,10 +50,10 @@ def get_taken_players(args, cache, lock, throttle):
     with open('taken_players.json', 'w') as f:
         f.writelines(json.dumps(result, default=json_serialize_datetime))
 
-    get_free_players(result, manager)
+    get_free_players(result)
 
 
-def get_free_players(taken_players, manager):
+def get_free_players(taken_players):
     free_players = []
 
     taken_player_ids = [x['player_id'] for x in taken_players]
@@ -72,20 +70,16 @@ def get_free_players(taken_players, manager):
                                      'position': constants.POSITIONS[player.position],
                                      'trend': player.market_value_trend})
 
-    # TODO
     with open('free_players.json', 'w') as f:
         f.writelines(json.dumps(free_players))
 
 
-def get_players_mw_change(args, cache, lock, throttle):
-    manager = ApiManager(args)
-
+def get_players_mw_change():
     players = []
 
     for team_id in constants.TEAM_IDS:
         for player in manager.api.team_players(team_id):
-            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats', cache,
-                                       lock, throttle)
+            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats')
 
             if 'leaguePlayer' in player_stats.keys():
                 manager_name = player_stats['leaguePlayer']['userName']

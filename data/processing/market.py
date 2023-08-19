@@ -6,18 +6,16 @@ from datetime import timezone
 from pytz import timezone
 
 from utility import constants
-from utility.api_manager import ApiManager
+from utility.api_manager import manager
 from utility.util import json_serialize_datetime
 
 
-def get_market_players(args, cache, lock, throttle):
-    manager = ApiManager(args)
-
+def get_market_players():
     players = []
 
     for player in manager.api.market(manager.league).players:
         if not player.username:
-            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats', cache, lock, throttle)
+            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats')
 
             expiration_time = (datetime.now(timezone('Europe/Berlin')) + timedelta(seconds=int(player.expiry)))
             players.append({'first_name': player.first_name,
