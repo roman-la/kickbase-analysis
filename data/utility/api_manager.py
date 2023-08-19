@@ -1,11 +1,17 @@
-import multiprocessing as mp
 import time
 
 from kickbase_api.kickbase import Kickbase
 
 
 class ApiManager:
-    def __init__(self, args):
+    def __init__(self):
+        self.users = None
+        self.throttle = None
+        self.cache = None
+        self.league = None
+        self.api = None
+
+    def init(self, args):
         # Kickbase login
         self.api = Kickbase()
         _, leagues = self.api.login(args.kbuser, args.kbpw)
@@ -22,38 +28,40 @@ class ApiManager:
         else:
             self.league = leagues[0]
 
+        self.cache = {}
+        self.throttle = 0.01
+
         # Setup user list
         self.users = [user for user in self.api.league_users(self.league)
                       if user.name not in args.ignore]
 
-    def get(self, url: str, cache, lock, throttle):
-        lock.acquire()
-        if url not in cache.keys():
-            time.sleep(throttle.value)
+    def get(self, url: str):
+        if url not in self.cache.keys():
+            time.sleep(self.throttle)
 
             delay = time.time()
-            cache[url] = self.api._do_get(url, True).json()
+            self.cache[url] = self.api._do_get(url, True).json()
             delay = time.time() - delay
 
-            # TODO: Neither "mp.cpu_count() - 1" nor 5 is not correct here
-            # There could be less processes running, which would increase the throttle unnecessarily
-            # Real number of running processes is needed
-            throttle.value = (throttle.value + (delay / 5)) / 2
-        lock.release()
+            self.throttle = (self.throttle + delay) / 2
 
-        return cache[url]
+            if self.throttle > 1:
+                self.throttle = 1
 
-    def get_transfers_raw(self, user_id, cache, lock, throttle):
+        return self.cache[url]
+
+    def get_transfers_raw(self, user_id):
         transfers_raw = []
         offset = 0
 
-        response = self.get(f'/leagues/{self.league.id}/users/{user_id}/feed?filter=12&start={offset}',
-                            cache, lock, throttle)
+        response = self.get(f'/leagues/{self.league.id}/users/{user_id}/feed?filter=12&start={offset}')
 
         while response['items']:
             transfers_raw = transfers_raw + response['items']
-            response = self.get(f'/leagues/{self.league.id}/users/{user_id}/feed?filter=12&start={offset}',
-                                cache, lock, throttle)
+            response = self.get(f'/leagues/{self.league.id}/users/{user_id}/feed?filter=12&start={offset}')
             offset += 25
 
         return transfers_raw
+
+
+manager = ApiManager()

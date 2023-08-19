@@ -4,12 +4,12 @@ from datetime import datetime
 import pandas as pd
 from dateutil import parser
 
-from utility.api_manager import ApiManager
+from utility.api_manager import manager
 from utility.constants import MATCH_DAYS
 from utility.constants import TIMEZONE_DE
 
 
-def calculate_revenue_data_daily(turnovers, manager):
+def calculate_revenue_data_daily(turnovers):
     user_transfer_revenue = {user.name: [] for user in manager.users}
     for buy, sell in turnovers:
         revenue = sell['value'] - buy['value']
@@ -40,9 +40,7 @@ def calculate_revenue_data_daily(turnovers, manager):
         f.writelines(json.dumps(data))
 
 
-def calculate_team_value_per_match_day(args, cache, lock, throttle):
-    manager = ApiManager(args)
-
+def calculate_team_value_per_match_day():
     result = {}
     for user in manager.users:
         # Get last match day
@@ -51,8 +49,7 @@ def calculate_team_value_per_match_day(args, cache, lock, throttle):
         # Get list of player ids per match
         match_day_player_ids = {match_day: [] for match_day in range(1, last_match_day + 1)}
         for match_day in match_day_player_ids:
-            line_up = manager.get(f'/v2/leagues/{manager.league.id}/table/{user.id}/players?matchDay={match_day}',
-                                  cache, lock)
+            line_up = manager.get(f'/v2/leagues/{manager.league.id}/table/{user.id}/players?matchDay={match_day}')
 
             # In line up
             for player in line_up['lp']:
@@ -66,8 +63,7 @@ def calculate_team_value_per_match_day(args, cache, lock, throttle):
         team_value = {match_day: 0 for match_day in range(1, last_match_day + 1)}
         for match_day, player_ids in match_day_player_ids.items():
             for player_id in set(player_ids):
-                player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player_id}/stats', cache,
-                                           lock, throttle)
+                player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player_id}/stats')
 
                 player_value_on_match_day = 0
                 if MATCH_DAYS[match_day].date() == datetime.now().date():
