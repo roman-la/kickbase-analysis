@@ -29,4 +29,6 @@ TEAM_IDS = [2, 3, 4, 5, 7, 9, 10, 11, 13, 14, 15, 18, 24, 28, 40, 42, 43, 50]
 POSITIONS = {1: 'TW', 2: 'ABW', 3: 'MF', 4: 'ANG'}
 
 MATCH_DAYS = {1: datetime(2023, 8, 18, 20, 30, tzinfo=TIMEZONE_DE),
-              2: datetime(2023, 8, 25, 20, 30, tzinfo=TIMEZONE_DE)}
+              2: datetime(2023, 8, 25, 20, 30, tzinfo=TIMEZONE_DE),
+              3: datetime(2023, 9, 1, 20, 30, tzinfo=TIMEZONE_DE),
+              4: datetime(2023, 9, 15, 20, 30, tzinfo=TIMEZONE_DE),}
