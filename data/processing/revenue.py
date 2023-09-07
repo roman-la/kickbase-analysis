@@ -46,36 +46,17 @@ def calculate_team_value_per_match_day():
         # Get last match day
         last_match_day = manager.api.league_stats(manager.league).current_day
 
-        # Get list of player ids per match
-        match_day_player_ids = {match_day: [] for match_day in range(1, last_match_day + 1)}
-        for match_day in match_day_player_ids:
-            line_up = manager.get(f'/v2/leagues/{manager.league.id}/table/{user.id}/players?matchDay={match_day}')
-
-            # In line up
-            for player in line_up['lp']:
-                match_day_player_ids[match_day].append(player['i'])
-
-            # Not in line up
-            for player in line_up['nlp']:
-                match_day_player_ids[match_day].append(player['i'])
-
-        # Get sum of player values for each match day
+        # Get team value for each match day
         team_value = {match_day: 0 for match_day in range(1, last_match_day + 1)}
-        for match_day, player_ids in match_day_player_ids.items():
-            for player_id in set(player_ids):
-                player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player_id}/stats')
+        for match_day in MATCH_DAYS:
+            player_stats = manager.get(f'/leagues/{manager.league.id}/users/{user.id}/stats')
 
-                player_value_on_match_day = 0
-                if MATCH_DAYS[match_day].date() == datetime.now().date():
-                    player_value_on_match_day = player_stats['marketValue']
-                else:
-                    for entry in player_stats['marketValues']:
-                        if parser.parse(entry['d']).date() <= MATCH_DAYS[match_day].date():
-                            player_value_on_match_day = int(entry['m'])
-                        else:
-                            break
-
-                team_value[match_day] += player_value_on_match_day
+            team_value_on_match_day = 0
+            for teamValues in player_stats['teamValues']:
+                if MATCH_DAYS[match_day].date() == datetime.fromisoformat(teamValues['d'][:-1]).date():
+                    team_value_on_match_day = teamValues['v']
+            if(len(team_value) >= match_day):
+                team_value[match_day] = team_value_on_match_day
 
         result[user.name] = team_value
 
