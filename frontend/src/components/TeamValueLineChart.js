@@ -8,11 +8,21 @@ import data from '../data/team_values.json'
 
 function TeamValueLineChart(props) {
     var processedData = []
+    var minValue = Number.MAX_SAFE_INTEGER
+    var maxValue = 0
 
     for (var user in data) {
         var d = []
-        for (var matchDay in data[user])
-            d.push({ x: matchDay, y: data[user][matchDay] })
+        for (var matchDay in data[user]) {
+            let teamValue = data[user][matchDay]
+            d.push({ x: matchDay, y: teamValue })
+
+            if (teamValue < minValue)
+                minValue = teamValue
+
+            if (teamValue > maxValue)
+                maxValue = teamValue
+        }
 
         processedData.push({ id: user, data: d })
     }
@@ -26,7 +36,8 @@ function TeamValueLineChart(props) {
                 yScale={{
                     type: 'linear',
                     stacked: false,
-                    min: 100000000
+                    min: minValue,
+                    max: maxValue
                 }}
                 yFormat={value => `${Number(value).toLocaleString('de-DE', {
                     minimumFractionDigits: 0,
