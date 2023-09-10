@@ -8,21 +8,9 @@ import data from '../data/revenue_sum.json'
 
 function TransferRevenueLineChart(props) {
     var processedData = []
-    var minValue = Number.MAX_SAFE_INTEGER
-    var maxValue = 0
 
-    for (var user in data) {
-        console.log(data[user])
+    for (var user in data) 
         processedData.push({ id: user, data: data[user].map((e) => ({ x: e[0], y: e[1] })) })
-
-        let max = Math.max(...data[user].map(e => e[1]))
-        if (max > maxValue)
-            maxValue = max
-
-        let min = Math.min(...data[user].map(e => e[1]))
-        if (min < minValue)
-            minValue = min
-    }
 
     return (
         <div style={{ height: '30em' }}>
@@ -40,8 +28,8 @@ function TransferRevenueLineChart(props) {
                 yScale={{
                     type: 'linear',
                     stacked: false,
-                    min: minValue,
-                    max: maxValue
+                    min: 'auto',
+                    max: 'auto'
                 }}
                 yFormat={value => `${new Intl.NumberFormat('de-DE', {
                     maximumFractionDigits: 0
