@@ -31,4 +31,16 @@ POSITIONS = {1: 'TW', 2: 'ABW', 3: 'MF', 4: 'ANG'}
 MATCH_DAYS = {1: datetime(2023, 8, 18, 20, 30, tzinfo=TIMEZONE_DE),
               2: datetime(2023, 8, 25, 20, 30, tzinfo=TIMEZONE_DE),
               3: datetime(2023, 9, 1, 20, 30, tzinfo=TIMEZONE_DE),
-              4: datetime(2023, 9, 15, 20, 30, tzinfo=TIMEZONE_DE),}
+              4: datetime(2023, 9, 15, 20, 30, tzinfo=TIMEZONE_DE),
+              5: datetime(2023, 9, 22, 20, 30, tzinfo=TIMEZONE_DE),
+              6: datetime(2023, 9, 29, 20, 30, tzinfo=TIMEZONE_DE),
+              7: datetime(2023, 10, 6, 20, 30, tzinfo=TIMEZONE_DE),
+              8: datetime(2023, 10, 20, 20, 30, tzinfo=TIMEZONE_DE),
+              9: datetime(2023, 10, 28, 20, 30, tzinfo=TIMEZONE_DE),
+              10: datetime(2023, 11, 4, 20, 30, tzinfo=TIMEZONE_DE),
+              11: datetime(2023, 11, 11, 20, 30, tzinfo=TIMEZONE_DE),
+              12: datetime(2023, 11, 25, 20, 30, tzinfo=TIMEZONE_DE),
+              13: datetime(2023, 12, 2, 20, 30, tzinfo=TIMEZONE_DE),
+              14: datetime(2023, 12, 9, 20, 30, tzinfo=TIMEZONE_DE),
+              15: datetime(2023, 12, 16, 20, 30, tzinfo=TIMEZONE_DE),
+              16: datetime(2023, 12, 20, 20, 30, tzinfo=TIMEZONE_DE)}
