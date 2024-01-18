@@ -18,7 +18,7 @@ Assuming you have Python (3.10) already setup, run the following commands to set
 cd data/
 pip install pipenv
 pipenv install
-pipenv run main.py --kbuser your@mail.com --kbpw yourpassword123 --league="Your League Name" --ignore ManagerX ManagerY
+pipenv run main.py --kbuser your@mail.com --kbpw yourpassword123 --league="Your League Name" --ignore ManagerX ManagerY --start 01.07.2023
 ```
 
 Giving the name of your league is optional. If not set, your first league (probably the one you are part of the longest time) will be used.
