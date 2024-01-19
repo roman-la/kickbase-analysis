@@ -1,11 +1,9 @@
 import json
-from datetime import datetime
 
 from dateutil import parser
 
 from processing.revenue import calculate_revenue_data_daily
 from utility.api_manager import manager
-from utility.constants import TIMEZONE_DE
 from utility.util import json_serialize_datetime
 
 
@@ -16,6 +14,9 @@ def get_turnovers():
         transfers = []
 
         for buy in manager.get_transfers_raw(user.id):
+            if parser.parse(buy['date']) < manager.start:
+                continue
+
             transfer_type = 'buy' if buy['type'] == 12 else 'sell'
 
             if 'bn' in buy['meta']:
@@ -60,7 +61,7 @@ def get_turnovers():
                 continue
 
             if transfer not in [turnover[1] for turnover in turnovers]:
-                date = datetime(2023, 7, 1, tzinfo=TIMEZONE_DE)
+                date = manager.start
                 buy_transfer = {'date': date,
                                 'first_name': transfer['first_name'],
                                 'last_name': transfer['last_name'],

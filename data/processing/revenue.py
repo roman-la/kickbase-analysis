@@ -2,7 +2,6 @@ import json
 from datetime import datetime
 
 import pandas as pd
-from dateutil import parser
 
 from utility.api_manager import manager
 from utility.constants import MATCH_DAYS
@@ -17,7 +16,7 @@ def calculate_revenue_data_daily(turnovers):
 
     # Add start and end points
     for _, data in user_transfer_revenue.items():
-        data.append((0, datetime(2023, 7, 1, tzinfo=TIMEZONE_DE)))
+        data.append((0, manager.start))
         data.append((0, datetime.now(TIMEZONE_DE)))
 
     dataframes = {}
@@ -49,14 +48,19 @@ def calculate_team_value_per_match_day():
         # Get team value for each match day
         team_value = {match_day: 0 for match_day in range(1, last_match_day + 1)}
         for match_day in MATCH_DAYS:
+            if MATCH_DAYS[match_day] < manager.start:
+                continue
+
             player_stats = manager.get(f'/leagues/{manager.league.id}/users/{user.id}/stats')
 
             team_value_on_match_day = 0
             for teamValues in player_stats['teamValues']:
                 if MATCH_DAYS[match_day].date() == datetime.fromisoformat(teamValues['d'][:-1]).date():
                     team_value_on_match_day = teamValues['v']
-            if(len(team_value) >= match_day):
+            if (len(team_value) >= match_day):
                 team_value[match_day] = team_value_on_match_day
+
+        team_value = {k: v for k, v in team_value.items() if v != 0}
 
         result[user.name] = team_value
 

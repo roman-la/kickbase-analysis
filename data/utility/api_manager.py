@@ -1,6 +1,9 @@
 import time
+from datetime import datetime
 
 from kickbase_api.kickbase import Kickbase
+
+from utility.constants import TIMEZONE_DE
 
 
 class ApiManager:
@@ -10,6 +13,7 @@ class ApiManager:
         self.cache = None
         self.league = None
         self.api = None
+        self.start = None
 
     def init(self, args):
         # Kickbase login
@@ -34,6 +38,8 @@ class ApiManager:
         # Setup user list
         self.users = [user for user in self.api.league_users(self.league)
                       if user.name not in args.ignore]
+
+        self.start = TIMEZONE_DE.localize(datetime.strptime(args.start, '%d.%m.%Y'))
 
     def get(self, url: str):
         if url not in self.cache.keys():

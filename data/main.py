@@ -1,6 +1,6 @@
-import argparse
 import json
 import time
+from argparse import ArgumentParser
 from datetime import datetime
 
 from dateutil.tz import tzlocal
@@ -12,11 +12,12 @@ from processing.revenue import calculate_team_value_per_match_day
 from processing.turnovers import get_turnovers
 from utility.api_manager import manager
 
-parser = argparse.ArgumentParser()
+parser = ArgumentParser()
 parser.add_argument('--ignore', required=False, nargs="+", type=str, default=[])
 parser.add_argument('--kbpw', required=True, type=str)
 parser.add_argument('--kbuser', required=True, type=str)
 parser.add_argument('--league', required=False, type=str)
+parser.add_argument('--start', required=True, type=str)
 args = parser.parse_args()
 
 
