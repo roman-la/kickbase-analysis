@@ -18,7 +18,6 @@ import FreePlayersTable from "./components/FreePlayersTable"
 import timestamp from './data/timestamp.json'
 import TransferRevenueLineChart from './components/TransferRevenueLineChart'
 import LineupPlanner from "./components/LineupPlanner"
-import HelpIcon from './components/HelpIcon'
 import MarketValueChangesTable from './components/MarketValueChangesTable'
 import TeamValueLineChart from './components/TeamValueLineChart'
 
@@ -60,7 +59,7 @@ function App() {
                 <MarketValueChangesTable />
               </Paper>
               <Paper sx={{ marginTop: 2 }} elevation={5}>
-                <Typography variant="h4" sx={{ padding: 1 }}>Aufstellungs Planer <HelpIcon text="Der aktuelle Kontostand kann eingegeben und Spieler in der letzten Spalte zum Verkaufen markiert werden. Der neue Kontostand wird dynamisch ausgerechnet. Mögliche Formationen werden über der Tabelle angezeigt: Spieler im Kader (blau), mögliche Formation (grün), nicht mögliche Formation (rot)" /></Typography>
+                <Typography variant="h4" sx={{ padding: 1 }}>Aufstellungs Planer</Typography>
                 <LineupPlanner />
               </Paper>
             </TabPanel>
