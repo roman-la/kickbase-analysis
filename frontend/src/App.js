@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
@@ -26,7 +26,18 @@ const lightTheme = createTheme({ palette: { mode: 'light' } })
 
 function App() {
   const [selectedTab, setSelectedTab] = useState("1")
-  const [darkModeEnabled, setDarkModeEnabled] = useState(false)
+  const [darkModeEnabled, setDarkModeEnabled] = useState(JSON.parse(localStorage.getItem("darkModeEnabled")))
+
+  if (darkModeEnabled === null) {
+    let systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+    setDarkModeEnabled(systemTheme)
+    localStorage.setItem("darkModeEnabled", systemTheme)
+  }
+
+  const handleThemeToggle = (status) => {
+    setDarkModeEnabled(status)
+    localStorage.setItem("darkModeEnabled", status)
+  }
 
   return (
     <ThemeProvider theme={darkModeEnabled ? darkTheme : lightTheme}>
@@ -45,7 +56,7 @@ function App() {
                 </Grid>
                 <Grid item><Typography variant="button" style={{ opacity: '0.7' }}>Stand: {new Date(timestamp.time).toLocaleString('de-DE')}</Typography></Grid>
                 <Grid item>
-                  <FormControlLabel control={<Switch checked={darkModeEnabled} onChange={(e) => setDarkModeEnabled(e.target.checked)} />} label={<Typography variant="button" style={{ opacity: '0.7' }}>Dark Mode</Typography>} />
+                  <FormControlLabel control={<Switch checked={darkModeEnabled} onChange={(e) => handleThemeToggle(e.target.checked)} />} label={<Typography variant="button" style={{ opacity: '0.7' }}>Dark Mode</Typography>} />
                 </Grid>
               </Grid>
             </Box>
