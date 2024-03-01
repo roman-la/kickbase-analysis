@@ -1,7 +1,5 @@
 import json
-from datetime import datetime
 
-import pytz
 from dateutil import parser
 
 from utility import constants
@@ -22,7 +20,7 @@ def get_taken_players():
         for player in manager.api.league_user_players(manager.league, user.id):
             # Default values in case the player got randomly assigned on league join
             buy_value = 0
-            bought_date = datetime(2023, 7, 1, tzinfo=pytz.timezone('Europe/Berlin'))
+            bought_date = manager.start
 
             # Get date and value of newest buy transfer for that player
             for transfer in transfers:

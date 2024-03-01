@@ -31,7 +31,7 @@ jobs:
     
     - name: Run code
       working-directory: data/
-      run: python -m pipenv run python main.py --kbuser ${{ secrets.KB_MAIL }} --kbpw ${{ secrets.KB_PW }} --league="${{ secrets.KB_LEAGUE }}"
+      run: python -m pipenv run python main.py --kbuser ${{ secrets.KB_MAIL }} --kbpw ${{ secrets.KB_PW }} --league="${{ secrets.KB_LEAGUE }}" --start 21.12.2023
     
     - name: Copy result
       run: cp data/*.json frontend/src/data
