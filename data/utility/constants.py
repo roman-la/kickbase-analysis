@@ -43,4 +43,4 @@ MATCH_DAYS = {1: datetime(2023, 8, 18, 20, 30, tzinfo=TIMEZONE_DE),
               13: datetime(2023, 12, 2, 20, 30, tzinfo=TIMEZONE_DE),
               14: datetime(2023, 12, 9, 20, 30, tzinfo=TIMEZONE_DE),
               15: datetime(2023, 12, 16, 20, 30, tzinfo=TIMEZONE_DE),
-              16: datetime(2023, 12, 20, 20, 30, tzinfo=TIMEZONE_DE)}
+              16: datetime(2023, 12, 20, 20, 30, tzinfo=TIMEZONE_DE),}
