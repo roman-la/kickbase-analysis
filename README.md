@@ -13,7 +13,7 @@ If you are interested in how I set it up, check out this guide https://github.co
 
 If you are interested in running the code for your own league locally, follow this small guide.
 
-Assuming you have Python (3.10) already setup, run the following commands to setup the environment and run the code for data collection:
+Assuming you have Python (3.12) already setup, run the following commands to setup the environment and run the code for data collection:
 ```
 cd data/
 pip install pipenv
