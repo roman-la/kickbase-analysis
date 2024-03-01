@@ -33,7 +33,7 @@ function App() {
     <ThemeProvider theme={darkModeEnabled ? darkTheme : lightTheme}>
       <CssBaseline />
       <div style={{ width: '1000px', marginLeft: 'auto', marginRight: 'auto' }}>
-        <Box sx={{ marginBottom: '145px' }}>
+        <Box sx={{ marginBottom: 2 }}>
           <TabContext value={selectedTab}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', maxWidth: '1000px', minWidth: '700px' }}>
               <Grid container direction="row" justifyContent="space-between" alignItems="center">
@@ -51,48 +51,48 @@ function App() {
               </Grid>
             </Box>
             <TabPanel sx={{ padding: 0 }} value="1">
-              <Paper sx={{ marginTop: '25px' }} elevation={5}>
-                <Typography variant="h4" sx={{ padding: '15px' }}>Transfermarkt</Typography>
+              <Paper sx={{ marginTop: 2 }} elevation={5}>
+                <Typography variant="h4" sx={{ padding: 1 }}>Transfermarkt</Typography>
                 <MarketTable />
               </Paper>
-              <Paper sx={{ marginTop: '25px' }} elevation={5}>
-                <Typography variant="h4" sx={{ padding: '15px' }}>Marktwertveränderungen</Typography>
+              <Paper sx={{ marginTop: 2 }} elevation={5}>
+                <Typography variant="h4" sx={{ padding: 1 }}>Marktwertveränderungen</Typography>
                 <MarketValueChangesTable />
               </Paper>
-              <Paper sx={{ marginTop: '25px' }} elevation={5}>
-                <Typography variant="h4" sx={{ padding: '15px' }}>Aufstellungs Planer <HelpIcon text="Der aktuelle Kontostand kann eingegeben und Spieler in der letzten Spalte zum Verkaufen markiert werden. Der neue Kontostand wird dynamisch ausgerechnet. Mögliche Formationen werden über der Tabelle angezeigt: Spieler im Kader (blau), mögliche Formation (grün), nicht mögliche Formation (rot)" /></Typography>
+              <Paper sx={{ marginTop: 2 }} elevation={5}>
+                <Typography variant="h4" sx={{ padding: 1 }}>Aufstellungs Planer <HelpIcon text="Der aktuelle Kontostand kann eingegeben und Spieler in der letzten Spalte zum Verkaufen markiert werden. Der neue Kontostand wird dynamisch ausgerechnet. Mögliche Formationen werden über der Tabelle angezeigt: Spieler im Kader (blau), mögliche Formation (grün), nicht mögliche Formation (rot)" /></Typography>
                 <LineupPlanner />
               </Paper>
             </TabPanel>
             <TabPanel sx={{ padding: 0 }} value="2">
-              <Paper sx={{ marginTop: '25px' }} elevation={5}>
-                <Typography variant="h4" sx={{ padding: '15px' }}>Transfererlöse</Typography>
+              <Paper sx={{ marginTop: 2 }} elevation={5}>
+                <Typography variant="h4" sx={{ padding: 1 }}>Transfererlöse</Typography>
                 <TurnoversTable />
               </Paper>
-              <Paper sx={{ marginTop: '25px' }} elevation={5}>
-                <Typography variant="h4" sx={{ padding: '15px' }}>Summe der Transfererlöse</Typography>
+              <Paper sx={{ marginTop: 2 }} elevation={5}>
+                <Typography variant="h4" sx={{ padding: 1 }}>Summe der Transfererlöse</Typography>
                 <TransferRevenueLineChart darkModeEnabled={darkModeEnabled} />
               </Paper>
-              <Paper sx={{ marginTop: '25px' }} elevation={5}>
-                <Typography variant="h4" sx={{ padding: '15px' }}>Teamwert</Typography>
+              <Paper sx={{ marginTop: 2 }} elevation={5}>
+                <Typography variant="h4" sx={{ padding: 1 }}>Teamwert</Typography>
                 <TeamValueLineChart darkModeEnabled={darkModeEnabled} />
               </Paper>
             </TabPanel>
             <TabPanel sx={{ padding: 0 }} value="3">
-              <Paper sx={{ marginTop: '25px' }} elevation={5}>
-                <Typography variant="h4" sx={{ padding: '15px' }}>Gebundene Spieler</Typography>
+              <Paper sx={{ marginTop: 2 }} elevation={5}>
+                <Typography variant="h4" sx={{ padding: 1 }}>Gebundene Spieler</Typography>
                 <TakenPlayersTable />
               </Paper>
-              <Paper sx={{ marginTop: '25px' }} elevation={5}>
-                <Typography variant="h4" sx={{ padding: '15px' }}>Freie Spieler</Typography>
+              <Paper sx={{ marginTop: 2 }} elevation={5}>
+                <Typography variant="h4" sx={{ padding: 1 }}>Freie Spieler</Typography>
                 <FreePlayersTable />
               </Paper>
             </TabPanel>
           </TabContext>
         </Box>
-        <Paper sx={{ position: 'fixed', bottom: 0, width: '1000px' }} elevation={5}>
-          <Typography variant="h6" sx={{ padding: '15px' }}>Disclaimer</Typography>
-          <Typography sx={{ padding: '0px 15px 15px' }}>
+        <Paper sx={{ width: '1000px' }} elevation={5}>
+          <Typography variant="h6" sx={{ paddingLeft: 1, paddingTop: 1 }}>Disclaimer</Typography>
+          <Typography sx={{ padding: 1 }}>
             This site is for educational and non-profit purposes only.<br />
             All trademarks, logos and brand names are the property of their respective owners.
           </Typography>
