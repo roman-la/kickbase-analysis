@@ -36,6 +36,6 @@ npm install
 npm start
 ```
 
-## Contact
+## Contribute
 
-Feel free to contact me on discord (r0man51) or open an issue if you have any questions.
+Feel free to contribute to this repository. You can also contact me on discord (r0man51) or open an issue if you have any questions.
