@@ -1,4 +1,5 @@
-*.json
+.gitignore
+Dockerfile
 .github
 .idea
 .venv

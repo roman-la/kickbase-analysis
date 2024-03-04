@@ -47,7 +47,12 @@ GitHub offers free execution of CI/CD workflows and publishing of pages for publ
 
 ### With docker
 
-tbf
+- **Create config.** Rename template_settings.conf to settings.conf and adapt it to contain your data.
+- **Run data collection.** 
+    - `docker build -t data ./data`
+    - `docker run --name data data`
+    - `docker cp data:/timestamp.json ./frontend/src/data/`
+    - ...
 
 ### Without docker
 

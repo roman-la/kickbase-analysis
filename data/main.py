@@ -1,8 +1,8 @@
 import json
 import time
-from argparse import ArgumentParser
 from datetime import datetime
 
+import configargparse
 from dateutil.tz import tzlocal
 
 from processing.market import get_market_players
@@ -12,19 +12,20 @@ from processing.revenue import calculate_team_value_per_match_day
 from processing.turnovers import get_turnovers
 from utility.api_manager import manager
 
-parser = ArgumentParser()
-parser.add_argument('--ignore', required=False, nargs="+", type=str, default=[])
-parser.add_argument('--kbpw', required=True, type=str)
-parser.add_argument('--kbuser', required=True, type=str)
-parser.add_argument('--league', required=False, type=str)
-parser.add_argument('--start', required=True, type=str)
-args = parser.parse_args()
+p = configargparse.ArgParser(default_config_files=['settings.conf'])
+p.add('--mail', required=True)
+p.add('--pw', required=True)
+p.add('--league', required=False)
+p.add('--start', required=True)
+p.add('--ignore', required=False, action='append')
+
+options = p.parse_args()
 
 
 def main():
     start = time.time()
 
-    manager.init(args)
+    manager.init(options)
 
     get_turnovers()
     get_taken_players()
