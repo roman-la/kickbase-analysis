@@ -45,7 +45,7 @@ def get_taken_players():
 
         result = result + taken_players
 
-    with open('taken_players.json', 'w') as f:
+    with open('./data/taken_players.json', 'w') as f:
         f.writelines(json.dumps(result, default=json_serialize_datetime))
 
     get_free_players(result)
@@ -68,7 +68,7 @@ def get_free_players(taken_players):
                                      'position': constants.POSITIONS[player.position],
                                      'trend': player.market_value_trend})
 
-    with open('free_players.json', 'w') as f:
+    with open('./data/free_players.json', 'w') as f:
         f.writelines(json.dumps(free_players))
 
 
@@ -97,5 +97,5 @@ def get_players_mw_change():
                             'team_id': player.team_id,
                             'manager': manager_name})
 
-    with open('mw_changes.json', 'w') as f:
+    with open('./data/mw_changes.json', 'w') as f:
         f.writelines(json.dumps(players))

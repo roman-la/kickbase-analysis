@@ -1,6 +1,6 @@
-*.json
+.gitignore
+Dockerfile
 .github
 .idea
 .venv
 __pycache__/
-settings.conf

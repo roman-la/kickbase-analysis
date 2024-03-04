@@ -26,5 +26,5 @@ def get_market_players():
                             'position': constants.POSITIONS[player.position],
                             'trend': player_stats['mvTrend']})
 
-    with open('market.json', 'w') as f:
+    with open('./data/market.json', 'w') as f:
         f.writelines(json.dumps(players, default=json_serialize_datetime))

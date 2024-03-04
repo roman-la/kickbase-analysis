@@ -15,20 +15,20 @@ class ApiManager:
         self.api = None
         self.start = None
 
-    def init(self, args):
+    def init(self, options):
         # Kickbase login
         self.api = Kickbase()
-        _, leagues = self.api.login(args.kbuser, args.kbpw)
+        _, leagues = self.api.login(options.mail, options.pw)
 
         # Setup league
-        if args.league:
+        if options.league:
             self.league = None
             for league in leagues:
-                if league.name == args.league:
+                if league.name == options.league:
                     self.league = league
 
             if self.league is None:
-                raise Exception(f'League "{args.league}" not found.')
+                raise Exception(f'League "{options.league}" not found.')
         else:
             self.league = leagues[0]
 
@@ -37,9 +37,9 @@ class ApiManager:
 
         # Setup user list
         self.users = [user for user in self.api.league_users(self.league)
-                      if user.name not in args.ignore]
+                      if user.name not in options.ignore]
 
-        self.start = TIMEZONE_DE.localize(datetime.strptime(args.start, '%d.%m.%Y'))
+        self.start = TIMEZONE_DE.localize(datetime.strptime(options.start, '%d.%m.%Y'))
 
     def get(self, url: str):
         if url not in self.cache.keys():
