@@ -76,7 +76,7 @@ def get_turnovers():
 
         result = result + turnovers
 
-    with open('turnovers.json', 'w') as f:
+    with open('./data/turnovers.json', 'w') as f:
         f.writelines(json.dumps(result, default=json_serialize_datetime))
 
     calculate_revenue_data_daily(result)

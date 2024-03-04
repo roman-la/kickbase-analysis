@@ -10,11 +10,11 @@ If you want to get an idea of how the visualisation looks, check out https://rom
 
 # How to setup
 
-## Before you start
+### Before you start
 
 Keep in mind, that running the Python code for data collection sends **a lot of requests to the Kickbase API in a short amount of time**, more than you would send when using the app on your phone. Although some simple mechanisms to reduce the load on their servers are implemented (simple caching to prevent identical requests, small delay between requests, no use of multithreading/multiprocessing), you should still keep in mind that computing resources of an external entity should always be **used responsibly**. This is why you should **refrain from updating the data too frequently** by running the code multiple times without an adequate waiting time.
 
-## Executed and hosted by GitHub
+## Fork, GitHub workflow and GitHub pages
 
 GitHub offers free execution of CI/CD workflows and publishing of pages for public repositories. This allows us to execute both the data collection code and the build process of the react web app on runners hosted by GitHub and also publish the website files free of charge. Below is a guide on how to set it up for yourself.
 
@@ -43,42 +43,59 @@ GitHub offers free execution of CI/CD workflows and publishing of pages for publ
     - This can be changed by adapting the value under 'cron' in the `./github/combined-workflow.yml` file (https://crontab.guru/).
     - Don't try to collect data right after the market value update on 22:00, since some data will not be available right away. Rather use 22:30.
 
-## Executed and hosted by yourself
-
-### With docker
+## Docker
 
 - **Create config.** Rename template_settings.conf to settings.conf and adapt it to contain your data.
 - **Run data collection.** 
-    - `docker build -t data ./data`
-    - `docker run --name data data`
-    - `docker cp data:/timestamp.json ./frontend/src/data/`
-    - ...
+    - `docker build -t data ./data` Build the data collection image
+    - `docker run --name data data` Run the data collection image
+    - `docker cp data:/data ./frontend/src` Copy result files to frontend
+- **Run frontend.**
+    - `docker build -t frontend ./frontend` Build the frontend image
+    - `docker run -p 8080:80 frontend` Run frontend, e.g. under port 8080
+    - Frontend will be reachable under http://localhost:8080/
 
-### Without docker
+## Local
 
-Assuming you have Python (3.12) already setup, run the following commands to setup the environment and run the code for data collection:
-```
-cd data/
-pip install pipenv
-pipenv install
-pipenv run main.py --kbuser your@mail.com --kbpw yourpassword123 --league="Your League Name" --ignore ManagerX ManagerY --start 01.07.2023
-```
+### Prequisites
 
-Giving the name of your league is optional. If not set, your first league (probably the one you are part of the longest time) will be used.
-Also optional is the `--ignore` parameter. With that you can specify one or more manager names to be ignored for data collection (e.g. for inactive or bot acocunts).
+- Python 3.12
+- Node 20 (with npm)
 
-The resulting .json files need to be copied to the frontend folder:
-```
-cp data/*.json frontend/src/data
-```
+### Configuration
 
-After that, assuming you have Node 18.x and npm setup, run the following commands to start the development server (reachable under http://localhost:3000/kickbase-analysis):
-```
-cd frontend/
-npm install
-npm start
-```
+You can configure the data collection by bot command line arguments or a config file (rename `template_settings.conf` to `settings.conf` and adapt with your values).
+
+| Variable | Example | Description | Optional |
+| - | - | - | - |
+| mail | your@mail.de | The mail you use for logging into Kickbase | no |
+| pw | password123 | The password you use for logging into Kickbase | no |
+| league | Stammkneipe Berlin | The name of your League. If not set, any of your leagues will get picked (probabily the one you are longest part of) | yes |
+| start | 01.07.2023 | Date at when to start data collection. Use format DD.MM.YYYY. | no |
+| ignore | [ name1, name2 ] | List of names to ignore in data collection (e.g. inactive users) | yes |
+
+### Data collection
+
+- **Setup environment**
+    - `pip install pipenv` Install pipenv. Alternatively install the dependencies from Pipfile with pip.
+    - `cd ./data` Move to data folder.
+    - `pipenv install` Install dependencies into virtual environment.
+- **Run code**
+    - `pipenv run main.py` No arguments needed if you use settings.conf
+    - else: `pipenv run main.py --user your@mail.com --pw password123 --league "Stammkneipe Berlin" --start 01.07.2023`
+- **Copy files to frontend folder**
+    - `cd ..` go back into the projects main folder.
+    - `cp ./data/data ./frontend/src`
+
+### Frontend
+
+- **Install dependencies**
+    - `cd ./frontend` Move to frontend folder.
+    - `npm install` Install the dependencies.
+- **Run frontend**
+    - `npm start` Start the development server.
+    - Frontend will be reachable under http://localhost:3000/.
 
 # Contribute
 
-Feel free to contribute to this repository. You can also contact me on discord (r0man51) or open an issue if you have any questions.
+Feel free to contribute to this repository. You can also contact me on discord (r0man51) or open an issue if you have any ideas, bugfinds, questions, etc.

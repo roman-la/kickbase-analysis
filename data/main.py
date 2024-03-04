@@ -35,7 +35,7 @@ def main():
 
     # Timestamp for frontend
     # TODO: Possible to use file creation timestamp in frontend, so that this can be removed?
-    with open('timestamp.json', 'w') as f:
+    with open('./data/timestamp.json', 'w') as f:
         f.writelines(json.dumps({'time': datetime.now(tz=tzlocal()).isoformat()}))
 
     print(f'Execution time: {time.time() - start}s')

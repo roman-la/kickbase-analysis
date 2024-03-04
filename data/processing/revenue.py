@@ -35,7 +35,7 @@ def calculate_revenue_data_daily(turnovers):
         for entry in df.to_numpy().tolist():
             data[user].append((entry[0], entry[1]))
 
-    with open('revenue_sum.json', 'w') as f:
+    with open('./data/revenue_sum.json', 'w') as f:
         f.writelines(json.dumps(data))
 
 
@@ -64,5 +64,5 @@ def calculate_team_value_per_match_day():
 
         result[user.name] = team_value
 
-    with open('team_values.json', 'w') as f:
+    with open('./data/team_values.json', 'w') as f:
         f.writelines(json.dumps(result))
