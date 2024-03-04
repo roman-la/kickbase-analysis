@@ -71,7 +71,7 @@ You can configure the data collection by bot command line arguments or a config 
 | mail | your@mail.de | The mail you use for logging into Kickbase | no |
 | pw | password123 | The password you use for logging into Kickbase | no |
 | league | Stammkneipe Berlin | The name of your League. If not set, any of your leagues will get picked (probabily the one you are longest part of) | yes |
-| start | 01.07.2023 | Date at when to start data collection. Use format DD.MM.YYYY. | no |
+| start | 01.07.2023 | Date at when to start data collection. Use format DD.MM.YYYY | no |
 | ignore | [ name1, name2 ] | List of names to ignore in data collection (e.g. inactive users) | yes |
 
 ### Data collection
@@ -82,10 +82,10 @@ You can configure the data collection by bot command line arguments or a config 
     - `pipenv install` Install dependencies into virtual environment.
 - **Run code**
     - `pipenv run main.py` No arguments needed if you use settings.conf
-    - else: `pipenv run main.py --user your@mail.com --pw password123 --league "Stammkneipe Berlin" --start 01.07.2023`
+    - else use: `pipenv run main.py --user your@mail.com --pw password123 --league "Stammkneipe Berlin" --start 01.07.2023`
 - **Copy files to frontend folder**
-    - `cd ..` go back into the projects main folder.
-    - `cp ./data/data ./frontend/src`
+    - `cd ..` Go back into the projects main folder.
+    - `cp ./data/data/*.json ./frontend/src/data` Copy files to frontend.
 
 ### Frontend
 
