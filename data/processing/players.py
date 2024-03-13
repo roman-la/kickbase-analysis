@@ -1,6 +1,7 @@
 import json
 
 from dateutil import parser
+from tqdm import tqdm
 
 from utility import constants
 from utility.api_manager import manager
@@ -10,7 +11,7 @@ from utility.util import json_serialize_datetime
 def get_taken_players():
     result = []
 
-    for user in manager.users:
+    for user in tqdm(manager.users, desc="Collecting taken players for each manager"):
         taken_players = []
 
         transfers = manager.get_transfers_raw(user.id)
@@ -56,7 +57,7 @@ def get_free_players(taken_players):
 
     taken_player_ids = [x['player_id'] for x in taken_players]
 
-    for team_id in constants.TEAM_IDS:
+    for team_id in tqdm(constants.TEAM_IDS, desc="Collecting free players for each team"):
         for player in manager.api.team_players(team_id):
             if player.id not in taken_player_ids:
                 free_players.append({'player_id': player.id,
@@ -73,29 +74,33 @@ def get_free_players(taken_players):
 
 
 def get_players_mw_change():
-    players = []
+    result = []
 
+    players = []
     for team_id in constants.TEAM_IDS:
         for player in manager.api.team_players(team_id):
-            player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats')
+            players.append(player)
 
-            if 'leaguePlayer' in player_stats.keys():
-                manager_name = player_stats['leaguePlayer']['userName']
-            else:
-                manager_name = 'Computer'
+    for player in tqdm(players, desc="Collecting market value change of last three days for each player", miniters=2):
+        player_stats = manager.get(f'/leagues/{manager.league.id}/players/{player.id}/stats')
 
-            market_values = player_stats['marketValues']
-            market_values.reverse()
+        if 'leaguePlayer' in player_stats.keys():
+            manager_name = player_stats['leaguePlayer']['userName']
+        else:
+            manager_name = 'Computer'
 
-            players.append({'player_id': player.id,
-                            'first_name': player.first_name,
-                            'last_name': player.last_name,
-                            'market_value': player_stats['marketValue'],
-                            'today': market_values[0]['m'] - market_values[1]['m'],
-                            'one_day_ago': market_values[1]['m'] - market_values[2]['m'],
-                            'two_days_ago': market_values[2]['m'] - market_values[3]['m'],
-                            'team_id': player.team_id,
-                            'manager': manager_name})
+        market_values = player_stats['marketValues']
+        market_values.reverse()
+
+        result.append({'player_id': player.id,
+                       'first_name': player.first_name,
+                       'last_name': player.last_name,
+                       'market_value': player_stats['marketValue'],
+                       'today': market_values[0]['m'] - market_values[1]['m'],
+                       'one_day_ago': market_values[1]['m'] - market_values[2]['m'],
+                       'two_days_ago': market_values[2]['m'] - market_values[3]['m'],
+                       'team_id': player.team_id,
+                       'manager': manager_name})
 
     with open('./data/mw_changes.json', 'w') as f:
-        f.writelines(json.dumps(players))
+        f.writelines(json.dumps(result))

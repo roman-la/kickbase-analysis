@@ -8,6 +8,7 @@ kickbase-api = "*"
 pytz = "*"
 pandas = "*"
 configargparse = "*"
+tqdm = "*"
 
 [dev-packages]
 

@@ -38,7 +38,7 @@ def main():
     with open('./data/timestamp.json', 'w') as f:
         f.writelines(json.dumps({'time': datetime.now(tz=tzlocal()).isoformat()}))
 
-    print(f'Execution time: {time.time() - start}s')
+    print(f'Total execution time: {round(time.time() - start, 2)}s')
 
 
 if __name__ == '__main__':

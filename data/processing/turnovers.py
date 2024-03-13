@@ -5,12 +5,13 @@ from dateutil import parser
 from processing.revenue import calculate_revenue_data_daily
 from utility.api_manager import manager
 from utility.util import json_serialize_datetime
+from tqdm import tqdm
 
 
 def get_turnovers():
     result = []
 
-    for user in manager.users:
+    for user in tqdm(manager.users, desc="Collecting turnovers from sold players"):
         transfers = []
 
         for buy in manager.get_transfers_raw(user.id):
