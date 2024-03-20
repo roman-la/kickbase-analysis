@@ -43,27 +43,25 @@ def calculate_revenue_data_daily(turnovers):
 def calculate_team_value_per_match_day():
     result = {}
     for user in tqdm(manager.users, desc="Collecting each managers team value per match day"):
-        # Get last match day
-        last_match_day = manager.api.league_stats(manager.league).current_day
+        # Get match day number to start from (not necessarily 1 because not every league starts on season start)
+        start_match_day = next((match_day_number for match_day_number, match_day_date in MATCH_DAYS.items()
+                                if match_day_date > manager.start), 1)
+        # Get match day number of last occurred match day
+        end_match_day = manager.api.league_stats(manager.league).current_day
 
-        # Get team value for each match day
-        team_value = {match_day: 0 for match_day in range(1, last_match_day + 1)}
-        for match_day in MATCH_DAYS:
-            if MATCH_DAYS[match_day] < manager.start:
-                continue
+        manager_stats = manager.get(f'/leagues/{manager.league.id}/users/{user.id}/stats')
 
-            player_stats = manager.get(f'/leagues/{manager.league.id}/users/{user.id}/stats')
+        # Setup result dict
+        team_values = {match_day: 0 for match_day in range(start_match_day, end_match_day + 1)}
 
-            team_value_on_match_day = 0
-            for teamValues in player_stats['teamValues']:
-                if MATCH_DAYS[match_day].date() == datetime.fromisoformat(teamValues['d'][:-1]).date():
-                    team_value_on_match_day = teamValues['v']
-            if len(team_value) >= match_day:
-                team_value[match_day] = team_value_on_match_day
+        # Extract team value on match day
+        for match_day_number in team_values.keys():
+            for team_value in manager_stats['teamValues']:
+                if MATCH_DAYS[match_day_number].date() == datetime.fromisoformat(team_value['d']).date():
+                    team_values[match_day_number] = team_value['v']
+                    break
 
-        team_value = {k: v for k, v in team_value.items() if v != 0}
-
-        result[user.name] = team_value
+        result[user.name] = team_values
 
     with open('./data/team_values.json', 'w') as f:
         f.writelines(json.dumps(result))
