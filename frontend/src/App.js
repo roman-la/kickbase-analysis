@@ -1,25 +1,27 @@
-import React, { useState } from 'react'
-import Box from '@mui/material/Box'
-import Tab from '@mui/material/Tab'
+import GitHubIcon from '@mui/icons-material/GitHub'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
-import Paper from '@mui/material/Paper'
-import Typography from '@mui/material/Typography'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
-import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
-import MarketTable from "./components/MarketTable"
-import TurnoversTable from "./components/TurnoversTable"
-import TakenPlayersTable from "./components/TakenPlayersTable"
+import IconButton from '@mui/material/IconButton'
+import Paper from '@mui/material/Paper'
+import Switch from '@mui/material/Switch'
+import Tab from '@mui/material/Tab'
+import Typography from '@mui/material/Typography'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import React, { useState } from 'react'
 import FreePlayersTable from "./components/FreePlayersTable"
-import timestamp from './data/timestamp.json'
-import TransferRevenueLineChart from './components/TransferRevenueLineChart'
 import LineupPlanner from "./components/LineupPlanner"
+import MarketTable from "./components/MarketTable"
 import MarketValueChangesTable from './components/MarketValueChangesTable'
+import TakenPlayersTable from "./components/TakenPlayersTable"
 import TeamValueLineChart from './components/TeamValueLineChart'
+import TransferRevenueLineChart from './components/TransferRevenueLineChart'
+import TurnoversTable from "./components/TurnoversTable"
+import timestamp from './data/timestamp.json'
 
 const darkTheme = createTheme({ palette: { mode: 'dark' } })
 const lightTheme = createTheme({ palette: { mode: 'light' } })
@@ -34,7 +36,7 @@ function App() {
     localStorage.setItem("darkModeEnabled", systemTheme)
   }
 
-  const handleThemeToggle = (status) => {
+  const handleThemeChange = (status) => {
     setDarkModeEnabled(status)
     localStorage.setItem("darkModeEnabled", status)
   }
@@ -55,8 +57,9 @@ function App() {
                   </TabList>
                 </Grid>
                 <Grid item><Typography variant="button" style={{ opacity: '0.7' }}>Stand: {new Date(timestamp.time).toLocaleString('de-DE')}</Typography></Grid>
+                <Grid item><IconButton style={{ opacity: '0.7' }} onClick={() => { window.open("https://github.com/roman-la/kickbase-analysis", "_blank") }}><GitHubIcon /></IconButton></Grid>
                 <Grid item>
-                  <FormControlLabel control={<Switch checked={darkModeEnabled} onChange={(e) => handleThemeToggle(e.target.checked)} />} label={<Typography variant="button" style={{ opacity: '0.7' }}>Dark Mode</Typography>} />
+                  <FormControlLabel control={<Switch checked={darkModeEnabled} onChange={(e) => handleThemeChange(e.target.checked)} />} label={<Typography variant="button" style={{ opacity: '0.7' }}>Dark Mode</Typography>} />
                 </Grid>
               </Grid>
             </Box>
