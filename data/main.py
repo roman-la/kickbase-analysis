@@ -8,7 +8,7 @@ from dateutil.tz import tzlocal
 from processing.market import get_market_players
 from processing.players import get_players_mw_change
 from processing.players import get_taken_players
-from processing.revenue import calculate_team_value_per_match_day
+from processing.revenue import calculate_team_value_per_match_day, get_players_on_match_day
 from processing.turnovers import get_turnovers
 from utility.api_manager import manager
 
@@ -31,6 +31,7 @@ def main():
     get_taken_players()
     get_players_mw_change()
     calculate_team_value_per_match_day()
+    get_players_on_match_day()
     get_market_players()
 
     # Timestamp for frontend

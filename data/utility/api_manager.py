@@ -22,7 +22,6 @@ class ApiManager:
 
         # Setup league
         if options.league:
-            self.league = None
             for league in leagues:
                 if league.name == options.league:
                     self.league = league
