@@ -20,11 +20,13 @@ TIMEZONE_DE = pytz.timezone('Europe/Berlin')
 # 20 Hertha
 # 24 Bochum
 # 28 Köln
+# 39 St Pauli
 # 40 Union
 # 42 Darmstadt
 # 43 Leipzig
 # 50 Heidenheim
-TEAM_IDS = [2, 3, 4, 5, 7, 9, 10, 11, 13, 14, 15, 18, 24, 28, 40, 42, 43, 50]
+# 51 Holstein Kiel
+TEAM_IDS = [2, 3, 4, 5, 7, 9, 10, 11, 13, 14, 15, 18, 24, 39, 40, 43, 50, 51]
 
 POSITIONS = {1: 'TW', 2: 'ABW', 3: 'MF', 4: 'ANG'}
 
